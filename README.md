@@ -2,7 +2,7 @@
 
 ![Queue Holidays Manager screenshot](screenshot-holidays.png)
 
-A single, friendly screen to manage the holiday calendars behind your Omnichannel queues — instead of clicking through Dataverse records one at a time.
+A single, friendly screen to manage the holiday calendars behind your Omnichannel queues and Workforce Management — instead of clicking through Dataverse records one at a time.
 
 ## What is this? (in plain English)
 

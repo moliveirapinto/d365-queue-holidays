@@ -163,7 +163,7 @@ input[type=checkbox]{width:15px;height:15px;accent-color:var(--brand);cursor:poi
 <body>
   <div class="card">
     <div class="head">
-      <div><h1>Calendar Holidays</h1><div>Create, import, and assign holiday schedules to queues.</div></div>
+      <div><h1>Calendar Holidays</h1><div>Create, import, and assign holiday schedules to queues and Workforce Management.</div></div>
       <div class="stats">
         <div class="s">Total<b id="total">0</b></div>
         <div class="s">Visible<b id="visible">0</b></div>
@@ -223,12 +223,12 @@ input[type=checkbox]{width:15px;height:15px;accent-color:var(--brand);cursor:poi
         <span class="step-arrow">&#8594;</span>
         <span class="step-chip"><b>2</b>Add holidays to it</span>
         <span class="step-arrow">&#8594;</span>
-        <span class="step-chip"><b>3</b>Apply the schedule to queues</span>
+        <span class="step-chip"><b>3</b>Apply the schedule to queues or WFM</span>
       </div>
       <div class="modal-body">
         <div class="section-card">
           <div class="section-label"><span class="icon"><svg viewBox="0 0 20 20" fill="none"><path d="M3 6.25a1 1 0 0 1 1-1h3.6l1.3 1.75H16a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></span>Holiday Schedule</div>
-          <div class="section-hint">A schedule is a reusable holiday calendar — create one, fill it with holidays, then apply it to any number of queues.</div>
+          <div class="section-hint">A schedule is a reusable holiday calendar — create one, fill it with holidays, then apply it to any number of queues or Workforce Management operating hours.</div>
           <div class="field">
             <select id="scheduleSelect"></select>
           </div>
@@ -249,7 +249,7 @@ input[type=checkbox]{width:15px;height:15px;accent-color:var(--brand);cursor:poi
           <div class="tabpane active" id="tab-custom" style="margin-top:12px">
             <div class="field"><label>Holiday name</label><input id="customName" placeholder="e.g. Company Founding Day" /></div>
             <div class="field"><label>Date</label><input id="customDate" type="date" /></div>
-            <div class="hint">Leave blank if you only want to change queue assignment for the selected schedule.</div>
+            <div class="hint">Leave blank if you only want to change queue or Workforce Management assignment for the selected schedule.</div>
           </div>
 
           <div class="tabpane" id="tab-import" style="margin-top:12px">
@@ -474,7 +474,7 @@ input[type=checkbox]{width:15px;height:15px;accent-color:var(--brand);cursor:poi
   };
 
   const load = async () => {
-    setStatus('Loading holiday schedules and queue assignments...');
+    setStatus('Loading holiday schedules and their assignments...');
     await buildQueueRelationships();
     await buildWfmRelationships();
     const schedules = await loadSchedules();
@@ -546,7 +546,7 @@ input[type=checkbox]{width:15px;height:15px;accent-color:var(--brand);cursor:poi
         <td>${queueHtml}</td>
         <td>${fmtDur(it.duration)}</td>
         <td class="rowactions">
-          <button class="sec" data-edit="${it.id}" title="Edit this holiday and its queue assignment">Edit</button>
+          <button class="sec" data-edit="${it.id}" title="Edit this holiday and where it is applied">Edit</button>
           <button class="danger-btn" data-delete="${it.id}">Delete</button>
         </td>
       </tr>`;
