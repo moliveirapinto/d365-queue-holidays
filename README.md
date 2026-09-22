@@ -10,7 +10,7 @@ If you run customer service queues in Dynamics 365 / Copilot Service, you can te
 
 This app fixes that. It's a single page, added right inside your Copilot Service Admin Center, where you can:
 
-- 📅 **See every holiday**, across every schedule, in one table — filterable by year, month, or a quick search.
+- 📅 **See every holiday**, across every schedule, in one table — filterable by year, month, queue, WFM, or a quick search.
 - 🗓️ **Calendar view** — click **Calendar** for a month-by-month grid of your holidays, colour-coded per schedule. Click any holiday to edit it.
 - 🌍 **Import a whole country's public holidays** in one click (powered by a free public holiday database, covering 200+ countries), instead of typing each one in by hand.
 - ➕ **Add, edit, or delete** individual holidays whenever your business needs change.
@@ -128,7 +128,7 @@ If you want to modify the app and re-package it:
 ./scripts/build-solution-zip.ps1
 ```
 
-This regenerates `QueueHolidaysManager_1_3_0_0.zip` at the repo root, ready to import.
+This regenerates `QueueHolidaysManager_1_4_0_0.zip` at the repo root, ready to import.
 
 ## A note on the navigation step
 
