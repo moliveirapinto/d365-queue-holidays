@@ -15,6 +15,7 @@ This app fixes that. It's a single page, added right inside your Copilot Service
 - ➕ **Add, edit, or delete** individual holidays whenever your business needs change.
 - 🗂️ **Create, rename, or delete whole Holiday Schedules**, and see at a glance which queues are using each one.
 - 🔗 **Assign a schedule to any queue** (or remove it) without leaving the page.
+- 👥 **Apply the same holidays to Workforce Management** — tick the WFM operating hours that should treat those days as non-working when forecasting and scheduling.
 - 🧹 **Bulk-select and delete** holidays you don't need anymore, with a confirmation step so nothing gets removed by accident.
 
 No coding, no PowerShell, no digging through solution explorer — just a clean list you click around in.
@@ -40,6 +41,18 @@ A single, self-contained HTML/CSS/JavaScript **web resource** for Dataverse. The
 | Individual holiday | `calendarrule` (child of a `calendar`, `timecode = 2`) | The Dataverse Web API does **not** support updating or deleting a `calendarrule` directly, or querying it outside its parent — this app works around that by rebuilding the parent schedule via a deep-insert whenever a holiday is added, edited, or removed, then re-linking any queues that pointed at the old schedule. |
 | Business-hours calendar | `calendar` (`type = 0`) | The object a queue actually points to; its `holidayschedulecalendarid` lookup is what connects it to a Holiday Schedule. |
 | Queue → schedule assignment | `queue.msdyn_operatinghourid` → `msdyn_operatinghour.msdyn_calendarid` → business-hours `calendar` → `holidayschedulecalendarid` → Holiday Schedule `calendar` | The app resolves and updates this whole chain when you assign/unassign a schedule. |
+| WFM → schedule assignment | `msdyn_wemoperatinghours.msdyn_holidaycalendar` | Workforce Management points at the **same** Holiday Schedule records, but stores the calendar id in a plain **string** field rather than a lookup. One `PATCH` assigns or clears it. |
+
+### Workforce Management support
+
+![Apply to Workforce Management](screenshot-wfm.png)
+
+WFM and queues can share a single Holiday Schedule — there is no need to maintain holidays twice.
+
+Two consequences of WFM storing the link as a loose string rather than a lookup, both handled by the app:
+
+- **Re-linking on every change.** Because each holiday edit rebuilds the parent schedule under a new calendar id, any WFM record pointing at the old id is repointed to the new one as part of the same save. Without that, a WFM link would silently go stale after the first edit.
+- **No cascade on delete.** Dataverse will not clear a string field when the calendar it names is deleted, so deleting a schedule explicitly clears `msdyn_holidaycalendar` on every WFM record that referenced it, leaving no dangling ids behind.
 
 ### Country import
 
@@ -48,7 +61,7 @@ Public holiday data comes from the free [Nager.Date API](https://date.nager.at/)
 ### Browser support / requirements
 
 - Works in any modern browser that runs inside a Dataverse-hosted web resource (Edge/Chrome).
-- Requires the signed-in user to have read/write privileges on `calendar`, `calendarrule`, `queue`, and `msdyn_operatinghour` — the same privileges a System Administrator or System Customizer already has, and the same ones needed to manage queues manually today.
+- Requires the signed-in user to have read/write privileges on `calendar`, `calendarrule`, `queue`, and `msdyn_operatinghour` — the same privileges a System Administrator or System Customizer already has, and the same ones needed to manage queues manually today. Assigning holidays to Workforce Management additionally needs write access to `msdyn_wemoperatinghours`.
 - No app registration, client secret, or external service to configure.
 
 ### Reliability behaviour
@@ -110,7 +123,7 @@ If you want to modify the app and re-package it:
 ./scripts/build-solution-zip.ps1
 ```
 
-This regenerates `QueueHolidaysManager_1_1_0_0.zip` at the repo root, ready to import.
+This regenerates `QueueHolidaysManager_1_2_0_0.zip` at the repo root, ready to import.
 
 ## A note on the navigation step
 
