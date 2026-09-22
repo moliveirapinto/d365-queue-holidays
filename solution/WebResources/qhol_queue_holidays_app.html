@@ -14,7 +14,8 @@ body{margin:0;font-family:Segoe UI,system-ui,sans-serif;background:var(--bg);col
 .stats{display:flex;gap:8px}
 .s{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.35);border-radius:10px;padding:7px 10px;min-width:110px}
 .s b{display:block;font-size:18px}
-.tools{display:grid;grid-template-columns:.8fr .8fr 1.4fr auto;gap:10px;padding:12px;border-bottom:1px solid var(--line);background:#f8fbff;align-items:end}
+.tools{display:grid;grid-template-columns:.7fr .7fr 1fr 1fr 1.1fr auto;gap:10px;padding:12px;border-bottom:1px solid var(--line);background:#f8fbff;align-items:end}
+@media(max-width:1180px){.tools{grid-template-columns:1fr 1fr 1fr}.tools .btns{grid-column:1/-1}}
 @media(max-width:980px){.tools{grid-template-columns:1fr 1fr}.tools .btns{grid-column:1/-1}}
 .tools label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
 .tools input,.tools select{width:100%;border:1px solid var(--line);border-radius:8px;padding:8px}
@@ -129,6 +130,10 @@ input[type=checkbox]{width:15px;height:15px;accent-color:var(--brand);cursor:poi
 .cal-spacer{flex:1}
 .cal-count{font-size:12px;color:var(--muted)}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;padding:14px 18px 6px}
+.cal-filters{display:flex;align-items:end;gap:10px;padding:12px 18px 0;flex-wrap:wrap}
+.cal-filters label{display:block;font-size:11px;color:var(--muted);margin-bottom:4px}
+.cal-filters select{border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-size:12.5px;min-width:200px;max-width:260px}
+.cal-filters button{padding:7px 11px;font-size:12px}
 .cal-dow{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;text-align:center;padding:2px 0 6px;letter-spacing:.04em}
 .cal-cell{min-height:104px;border:1px solid var(--line);border-radius:10px;background:#fff;padding:6px 7px;display:flex;flex-direction:column;gap:4px;overflow:hidden}
 .cal-cell.other{background:#f7f9fd;border-color:#eaeff7}
@@ -205,6 +210,8 @@ input[type=checkbox]{width:15px;height:15px;accent-color:var(--brand);cursor:poi
     <div class="tools">
       <div><label>Year</label><select id="year"></select></div>
       <div><label>Month</label><select id="month"></select></div>
+      <div><label>Queue</label><select id="fQueue"></select></div>
+      <div><label>WFM</label><select id="fWfm"></select></div>
       <div><label>Search</label><input id="q" placeholder="Holiday, schedule, or queue" /></div>
       <div class="btns">
         <button class="sec" id="reset">Reset</button>
@@ -252,6 +259,11 @@ input[type=checkbox]{width:15px;height:15px;accent-color:var(--brand);cursor:poi
         <button class="sec" id="calToday">Today</button>
         <div class="cal-spacer"></div>
         <div class="cal-count" id="calCount"></div>
+      </div>
+      <div class="cal-filters">
+        <div><label>Queue</label><select id="calFQueue"></select></div>
+        <div><label>WFM</label><select id="calFWfm"></select></div>
+        <button class="sec" id="calFReset">Clear filters</button>
       </div>
       <div class="cal-grid" id="calGrid"></div>
       <div class="cal-legend" id="calLegend"></div>
@@ -558,6 +570,44 @@ input[type=checkbox]{width:15px;height:15px;accent-color:var(--brand);cursor:poi
     const ys = [...new Set(S.rows.map(x => x.date ? x.date.getUTCFullYear() : null).filter(Boolean))].sort((a,b)=>a-b);
     el('year').innerHTML = '<option value="all">All years</option>' + ys.map(y => `<option value="${y}">${y}</option>`).join('');
     el('month').innerHTML = months.map((m,i) => `<option value="${i===0?'all':i}">${m}</option>`).join('');
+    buildAssignmentFilters();
+  };
+
+  // Only queues/WFM records that actually carry a schedule are worth offering as filters.
+  const assignedQueueOptions = () => {
+    const seen = new Map();
+    Object.values(S.reverseMap).forEach(list => list.forEach(x => seen.set(x.queueId, x.queueName)));
+    return [...seen.entries()].sort((a,b) => a[1].localeCompare(b[1]));
+  };
+  const assignedWfmOptions = () => {
+    const seen = new Map();
+    Object.values(S.wfmReverseMap).forEach(list => list.forEach(x => seen.set(x.wfmId, x.wfmName)));
+    return [...seen.entries()].sort((a,b) => a[1].localeCompare(b[1]));
+  };
+
+  const fillSelect = (id, allLabel, options, keepValue) => {
+    const node = el(id);
+    if (!node) return;
+    const prev = keepValue ? node.value : 'all';
+    node.innerHTML = `<option value="all">${allLabel}</option><option value="none">— Not applied —</option>` +
+      options.map(([v, n]) => `<option value="${v}">${esc(n)}</option>`).join('');
+    if (prev && [...node.options].some(o => o.value === prev)) node.value = prev;
+  };
+
+  const buildAssignmentFilters = () => {
+    const q = assignedQueueOptions(), w = assignedWfmOptions();
+    fillSelect('fQueue', 'All queues', q, true);
+    fillSelect('fWfm', 'All WFM', w, true);
+    fillSelect('calFQueue', 'All queues', q, true);
+    fillSelect('calFWfm', 'All WFM', w, true);
+  };
+
+  const matchesAssignment = (it, queueVal, wfmVal) => {
+    const queues = S.reverseMap[it.scheduleId] || [];
+    const wfms = S.wfmReverseMap[(it.scheduleId || '').toLowerCase()] || [];
+    const qOk = queueVal === 'all' || (queueVal === 'none' ? queues.length === 0 : queues.some(x => x.queueId === queueVal));
+    const wOk = wfmVal === 'all' || (wfmVal === 'none' ? wfms.length === 0 : wfms.some(x => x.wfmId === wfmVal));
+    return qOk && wOk;
   };
 
   const appliedQueueNames = scheduleId => (S.reverseMap[scheduleId] || []).map(x => x.queueName);
@@ -614,11 +664,13 @@ input[type=checkbox]{width:15px;height:15px;accent-color:var(--brand);cursor:poi
 
   const apply = () => {
     const y = el('year').value, m = el('month').value, q = el('q').value.trim().toLowerCase();
+    const qv = el('fQueue').value, wv = el('fWfm').value;
     S.filtered = S.rows.filter(it => {
       const yy = it.date ? it.date.getUTCFullYear() : null;
       const mm = it.date ? (it.date.getUTCMonth()+1) : null;
       const ymOk = (y === 'all' || yy === Number(y)) && (m === 'all' || mm === Number(m));
-      const hay = (it.title + ' ' + it.scheduleName + ' ' + appliedQueueNames(it.scheduleId).join(' ')).toLowerCase();
+      if (!matchesAssignment(it, qv, wv)) return false;
+      const hay = (it.title + ' ' + it.scheduleName + ' ' + appliedQueueNames(it.scheduleId).join(' ') + ' ' + appliedWfmNames(it.scheduleId).join(' ')).toLowerCase();
       return ymOk && (!q || hay.includes(q));
     });
     render();
@@ -639,7 +691,8 @@ input[type=checkbox]{width:15px;height:15px;accent-color:var(--brand);cursor:poi
     el('calTitle').textContent = `${monthNames[cal.month]} ${cal.year}`;
 
     const byDay = {};
-    S.rows.forEach(r => {
+    const calRows = S.rows.filter(r => matchesAssignment(r, el('calFQueue').value, el('calFWfm').value));
+    calRows.forEach(r => {
       if (!r.date) return;
       const k = `${r.date.getUTCFullYear()}-${r.date.getUTCMonth()}-${r.date.getUTCDate()}`;
       (byDay[k] = byDay[k] || []).push(r);
@@ -696,7 +749,7 @@ input[type=checkbox]{width:15px;height:15px;accent-color:var(--brand);cursor:poi
     el('calGrid').innerHTML = head + body;
     el('calCount').textContent = monthCount === 1 ? '1 holiday this month' : `${monthCount} holidays this month`;
 
-    const used = S.schedules.filter(s => S.rows.some(r => r.scheduleId === s.calendarid));
+    const used = S.schedules.filter(s => calRows.some(r => r.scheduleId === s.calendarid));
     el('calLegend').innerHTML = used.length > 1
       ? used.map(s => {
           const [bg, fg] = scheduleColor(s.calendarid);
@@ -706,11 +759,11 @@ input[type=checkbox]{width:15px;height:15px;accent-color:var(--brand);cursor:poi
   };
 
   const openCalendar = () => {
-    const firstDated = S.rows.find(r => r.date);
+    const visible = S.rows.filter(r => r.date && matchesAssignment(r, el('calFQueue').value, el('calFWfm').value));
     const now = new Date();
+    const hasThisMonth = visible.some(r => r.date.getUTCFullYear() === now.getUTCFullYear() && r.date.getUTCMonth() === now.getUTCMonth());
     // Land on a month that actually has holidays when the current one is empty.
-    const hasThisMonth = S.rows.some(r => r.date && r.date.getUTCFullYear() === now.getUTCFullYear() && r.date.getUTCMonth() === now.getUTCMonth());
-    if (!hasThisMonth && firstDated) { cal.year = firstDated.date.getUTCFullYear(); cal.month = firstDated.date.getUTCMonth(); }
+    if (!hasThisMonth && visible.length) { cal.year = visible[0].date.getUTCFullYear(); cal.month = visible[0].date.getUTCMonth(); }
     else { cal.year = now.getUTCFullYear(); cal.month = now.getUTCMonth(); }
     renderCalendar();
     el('calBackdrop').classList.add('show');
@@ -1278,8 +1331,10 @@ input[type=checkbox]{width:15px;height:15px;accent-color:var(--brand);cursor:poi
 
   el('year').addEventListener('change', apply);
   el('month').addEventListener('change', apply);
+  el('fQueue').addEventListener('change', apply);
+  el('fWfm').addEventListener('change', apply);
   el('q').addEventListener('input', apply);
-  el('reset').addEventListener('click', () => { el('year').value='all'; el('month').value='all'; el('q').value=''; apply(); });
+  el('reset').addEventListener('click', () => { el('year').value='all'; el('month').value='all'; el('fQueue').value='all'; el('fWfm').value='all'; el('q').value=''; apply(); });
   el('refresh').addEventListener('click', () => load().catch(e => setStatus(String(e.message||e), 'err')));
 
   el('openNew').addEventListener('click', () => openModal(null));
@@ -1294,6 +1349,9 @@ input[type=checkbox]{width:15px;height:15px;accent-color:var(--brand);cursor:poi
     renderCalendar();
   });
   el('calBackdrop').addEventListener('click', e => { if (e.target === el('calBackdrop')) closeCalendar(); });
+  el('calFQueue').addEventListener('change', renderCalendar);
+  el('calFWfm').addEventListener('change', renderCalendar);
+  el('calFReset').addEventListener('click', () => { el('calFQueue').value='all'; el('calFWfm').value='all'; renderCalendar(); });
   el('calGrid').addEventListener('click', e => {
     const btn = e.target.closest('[data-cal-edit]');
     if (!btn) return;
