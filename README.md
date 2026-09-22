@@ -123,7 +123,7 @@ If you want to modify the app and re-package it:
 ./scripts/build-solution-zip.ps1
 ```
 
-This regenerates `QueueHolidaysManager_1_2_0_0.zip` at the repo root, ready to import.
+This regenerates `QueueHolidaysManager_1_2_1_0.zip` at the repo root, ready to import.
 
 ## A note on the navigation step
 
