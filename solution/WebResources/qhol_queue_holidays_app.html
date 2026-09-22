@@ -192,7 +192,7 @@ input[type=checkbox]{width:15px;height:15px;accent-color:var(--brand);cursor:poi
       <div class="status" id="status">Loading...</div>
       <div class="bulk-bar" id="bulkBar"><span id="bulkCount">0 selected</span><span class="spacer"></span><button class="sec" id="bulkClear">Clear selection</button><button class="danger-btn" id="bulkDelete">Delete selected</button></div>
       <table>
-        <thead><tr><th class="chk-col"><input type="checkbox" id="selectAll" /></th><th>Holiday</th><th>Date</th><th>Schedule</th><th>Applied To</th><th>Duration</th><th>Actions</th></tr></thead>
+        <thead><tr><th class="chk-col"><input type="checkbox" id="selectAll" /></th><th>Holiday</th><th>Date</th><th>Schedule</th><th>Queues</th><th>WFM</th><th>Duration</th><th>Actions</th></tr></thead>
         <tbody id="rows"></tbody>
       </table>
       <div class="empty" id="empty">No holidays for current filters.</div>
@@ -534,9 +534,11 @@ input[type=checkbox]{width:15px;height:15px;accent-color:var(--brand);cursor:poi
     el('rows').innerHTML = S.filtered.map(it => {
       const queues = appliedQueueNames(it.scheduleId);
       const wfms = appliedWfmNames(it.scheduleId);
-      const queueHtml = (queues.length || wfms.length)
-        ? queues.map(n => `<span class="chip">${esc(n)}</span>`).join('') +
-          wfms.map(n => `<span class="chip wfm">${esc(n)}</span>`).join('')
+      const queueHtml = queues.length
+        ? queues.map(n => `<span class="chip">${esc(n)}</span>`).join('')
+        : `<span class="chip warn">Not applied</span>`;
+      const wfmHtml = wfms.length
+        ? wfms.map(n => `<span class="chip wfm">${esc(n)}</span>`).join('')
         : `<span class="chip warn">Not applied</span>`;
       return `<tr>
         <td class="chk-col"><input type="checkbox" class="rowcheck" data-id="${it.id}" ${S.selected.has(it.id) ? 'checked' : ''} /></td>
@@ -544,6 +546,7 @@ input[type=checkbox]{width:15px;height:15px;accent-color:var(--brand);cursor:poi
         <td>${fmtDate(it.date)}</td>
         <td>${esc(it.scheduleName)}</td>
         <td>${queueHtml}</td>
+        <td>${wfmHtml}</td>
         <td>${fmtDur(it.duration)}</td>
         <td class="rowactions">
           <button class="sec" data-edit="${it.id}" title="Edit this holiday and where it is applied">Edit</button>
