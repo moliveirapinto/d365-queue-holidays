@@ -51,6 +51,12 @@ Public holiday data comes from the free [Nager.Date API](https://date.nager.at/)
 - Requires the signed-in user to have read/write privileges on `calendar`, `calendarrule`, `queue`, and `msdyn_operatinghour` — the same privileges a System Administrator or System Customizer already has, and the same ones needed to manage queues manually today.
 - No app registration, client secret, or external service to configure.
 
+### Reliability behaviour
+
+- **Large environments** — all queue and schedule queries follow `@odata.nextLink`, so environments with more than one page of queues or schedules load completely rather than silently truncating.
+- **Queue links are never silently dropped** — because every holiday change rebuilds the parent schedule, the app re-links each affected queue afterwards. If any re-link fails (for example, insufficient privileges on that queue's calendar), the old schedule is deliberately **not** deleted and the affected queue names are reported in the status bar. That prevents the silent failure mode where a queue stops observing holidays without anyone noticing.
+- **Offline-tolerant** — calls to the public holiday API use a 6-second timeout. If it is blocked by a firewall or proxy, the app falls back to a built-in list and tells you it did so, rather than hanging.
+
 ### Repo layout
 
 ```
@@ -104,7 +110,11 @@ If you want to modify the app and re-package it:
 ./scripts/build-solution-zip.ps1
 ```
 
-This regenerates `QueueHolidaysManager_1_0_0_0.zip` at the repo root, ready to import.
+This regenerates `QueueHolidaysManager_1_1_0_0.zip` at the repo root, ready to import.
+
+## A note on the navigation step
+
+Adding the app to the navigation is deliberately a manual step. The Copilot Service admin center (`msdyn_CSAdminCenter`) is a **Microsoft-managed** app, and shipping a sitemap edit inside this solution would create an unmanaged layer over a Microsoft-owned component. That would block future Microsoft updates to the admin center navigation and persist even after uninstalling this solution. Adding the subarea yourself keeps that change under your control and easy to reverse.
 
 ## License
 
