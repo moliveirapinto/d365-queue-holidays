@@ -1,1 +1,1104 @@
-Result: "<!doctype html>\n<html>\n<head>\n<meta charset=\"UTF-8\" />\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n<title>Queue Holidays</title>\n<style>\n:root{--bg:#f5f7fb;--panel:#fff;--line:#dfe5f2;--brand:#0f6cbd;--brand2:#25a7b8;--txt:#1d2433;--muted:#5f6c86;--ok:#1f9d55;--warn:#b26a00;--danger:#b42318}\n*{box-sizing:border-box}\nbody{margin:0;font-family:Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--txt);padding:16px}\n.card{max-width:1220px;margin:0 auto;background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}\n.head{background:linear-gradient(120deg,#0f6cbd,#25a7b8);color:#fff;padding:16px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}\n.head h1{margin:0;font-size:22px}\n.stats{display:flex;gap:8px}\n.s{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.35);border-radius:10px;padding:7px 10px;min-width:110px}\n.s b{display:block;font-size:18px}\n.tools{display:grid;grid-template-columns:.8fr .8fr 1.4fr auto;gap:10px;padding:12px;border-bottom:1px solid var(--line);background:#f8fbff;align-items:end}\n@media(max-width:980px){.tools{grid-template-columns:1fr 1fr}.tools .btns{grid-column:1/-1}}\n.tools label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}\n.tools input,.tools select{width:100%;border:1px solid var(--line);border-radius:8px;padding:8px}\n.btns{display:flex;gap:8px;align-items:end}\nbutton{border:0;border-radius:8px;padding:8px 12px;font-weight:600;cursor:pointer;font-size:13px}\n.pri{background:var(--brand);color:#fff}\n.sec{background:#fff;border:1px solid var(--line)}\n.danger-btn{background:#fff2f1;color:var(--danger);border:1px solid #ffd4cf}\n.body{padding:12px}\n.status{margin-bottom:10px;padding:8px 10px;border:1px solid #c6e3ff;background:#ebf5ff;color:#13446f;border-radius:8px;font-size:13px}\n.status.err{border-color:#ffd4cf;background:#fff2f1;color:var(--danger)}\n.status.ok{border-color:#d3edd9;background:#edf7ef;color:var(--ok)}\ntable{width:100%;border-collapse:collapse}\nth,td{border-bottom:1px solid #edf2fa;padding:9px;text-align:left;font-size:13px;vertical-align:top}\nth{font-size:11px;color:var(--muted);text-transform:uppercase;background:#f9fbff}\n.empty{padding:16px;text-align:center;color:var(--muted);display:none}\n.chip{display:inline-block;background:#edf7ef;border:1px solid #d3edd9;color:var(--ok);border-radius:999px;padding:2px 8px;font-size:11px;margin:2px 4px 2px 0}\n.chip.warn{background:#fff6e8;border-color:#ffe3ad;color:var(--warn)}\n.rowactions{display:flex;gap:6px;flex-wrap:wrap}\n.rowactions button{padding:5px 8px;font-size:12px}\n\n.modal-backdrop{position:fixed;inset:0;background:rgba(15,20,35,.45);display:none;align-items:center;justify-content:center;z-index:100;padding:16px}\n.modal-backdrop.show{display:flex}\n.modal{background:#fff;border-radius:14px;max-width:680px;width:100%;max-height:88vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.25)}\n.modal-head{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}\n.modal-head h2{margin:0;font-size:18px}\n.modal-body{padding:16px 18px 24px;display:flex;flex-direction:column;gap:14px}\n.field label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:4px}\n.field input,.field select{width:100%;border:1px solid var(--line);border-radius:8px;padding:8px}\n.tabs{display:flex;gap:6px;border-bottom:1px solid var(--line);margin-bottom:10px}\n.tab{padding:8px 12px;border-radius:8px 8px 0 0;cursor:pointer;font-size:13px;font-weight:600;color:var(--muted)}\n.tab.active{color:var(--brand);border:1px solid var(--line);border-bottom:2px solid #fff;background:#f8fbff}\n.tabpane{display:none}\n.tabpane.active{display:block}\n.us-toolbar{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;align-items:end}\n.us-toolbar .field{flex:1;min-width:120px}\n.us-list{max-height:220px;overflow:auto;border:1px solid var(--line);border-radius:8px}\n.us-item{display:flex;gap:8px;align-items:center;padding:7px 10px;border-bottom:1px solid #f0f3f9;font-size:13px}\n.us-item:last-child{border-bottom:0}\n.us-item .d{color:var(--muted);width:110px;flex:none}\n.queue-toolbar{display:flex;gap:8px;margin-bottom:8px}\n.queue-toolbar input{flex:1}\n.queue-list{max-height:220px;overflow:auto;border:1px solid var(--line);border-radius:8px}\n.queue-item{display:flex;gap:8px;align-items:center;padding:7px 10px;border-bottom:1px solid #f0f3f9;font-size:13px}\n.queue-item:last-child{border-bottom:0}\n.queue-item small{color:var(--muted)}\n.queue-item.disabled{opacity:.55}\n.modal-actions{display:flex;justify-content:flex-end;gap:8px;padding:14px 18px;border-top:1px solid var(--line)}\n.hint{font-size:12px;color:var(--muted)}\n\n.modal-backdrop{backdrop-filter:blur(3px)}\n.modal{animation:modalIn .18s ease-out;box-shadow:0 24px 70px rgba(15,23,42,.28);border:1px solid #e7ebf3}\n@keyframes modalIn{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}\n.modal-head{background:linear-gradient(120deg,#0f6cbd,#25a7b8);border-bottom:0;border-radius:14px 14px 0 0}\n.modal-head h2{color:#fff;font-size:19px}\n.modal-head .sec{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.35);color:#fff}\n.modal-head .sec:hover{background:rgba(255,255,255,.3)}\n.modal-subtitle{padding:10px 18px 0;font-size:12.5px;color:var(--muted)}\n.section-label{font-size:12px;font-weight:700;color:var(--txt);text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px;display:flex;align-items:center;gap:6px}\n.section-card{border:1px solid var(--line);border-radius:12px;padding:14px;background:#fbfcff}\n.segmented{display:inline-flex;background:#eef2fb;border-radius:10px;padding:4px;gap:4px}\n.segmented .tab{border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;border:0;background:transparent}\n.segmented .tab.active{background:#fff;color:var(--brand);box-shadow:0 1px 4px rgba(15,23,42,.14)}\n.import-grid{display:grid;grid-template-columns:1.3fr .8fr 1.3fr auto;gap:10px;align-items:end}\n.import-grid .field{margin:0}\n.us-item{transition:background .12s;border-radius:6px}\n.us-item:hover{background:#f5f9ff}\n.us-item input[type=checkbox]{width:16px;height:16px;accent-color:var(--brand)}\n.queue-item{transition:background .12s;border-radius:6px}\n.queue-item:hover:not(.disabled){background:#f5f9ff}\n.queue-item input[type=checkbox]{width:16px;height:16px;accent-color:var(--brand)}\nbutton.pri{box-shadow:0 2px 8px rgba(15,108,189,.3)}\nbutton.pri:hover{filter:brightness(1.06)}\nbutton.sec:hover{background:#f2f6ff}\n@media(max-width:620px){.import-grid{grid-template-columns:1fr 1fr}.import-grid button{grid-column:1/-1}}\n\n.icon{width:16px;height:16px;display:inline-block;vertical-align:-3px;margin-right:6px;flex:none}\n.icon svg{width:100%;height:100%;display:block}\n.modal-head h2 .icon{width:19px;height:19px;vertical-align:-4px;margin-right:8px}\n#modalClose .icon{margin-right:0;width:14px;height:14px;vertical-align:-2px}\n\nbody.modal-open{overflow:hidden}\n.modal{scrollbar-width:thin;scrollbar-color:#c7d3e6 transparent}\n.modal::-webkit-scrollbar{width:9px}\n.modal::-webkit-scrollbar-track{background:transparent}\n.modal::-webkit-scrollbar-thumb{background:#c7d3e6;border-radius:99px;border:2px solid #fff}\n.modal::-webkit-scrollbar-thumb:hover{background:#a9bad6}\n.us-list,.queue-list{scrollbar-width:thin;scrollbar-color:#d7dfee transparent}\n.us-list::-webkit-scrollbar,.queue-list::-webkit-scrollbar{width:7px}\n.us-list::-webkit-scrollbar-track,.queue-list::-webkit-scrollbar-track{background:transparent;margin:4px 0}\n.us-list::-webkit-scrollbar-thumb,.queue-list::-webkit-scrollbar-thumb{background:#d7dfee;border-radius:99px}\n.us-list::-webkit-scrollbar-thumb:hover,.queue-list::-webkit-scrollbar-thumb:hover{background:#b9c8e2}\n\n.bulk-bar{display:none;align-items:center;gap:10px;padding:10px 12px;margin:0 12px 10px;background:#eef4ff;border:1px solid #cfe0ff;border-radius:10px;font-size:13px;color:#123c73}\n.bulk-bar.show{display:flex}\n.bulk-bar .spacer{flex:1}\nth.chk-col,td.chk-col{width:34px;text-align:center}\ninput[type=checkbox]{width:15px;height:15px;accent-color:var(--brand);cursor:pointer}\n.confirm-list{max-height:200px;overflow:auto;border:1px solid var(--line);border-radius:10px;margin-top:4px}\n.confirm-item{padding:8px 12px;border-bottom:1px solid #f0f3f9;font-size:13px}\n.confirm-item:last-child{border-bottom:0}\n.confirm-item b{display:block}\n.confirm-item span{color:var(--muted);font-size:12px}\n.modal.confirm{max-width:460px}\n.modal-head.danger{background:linear-gradient(120deg,#c4342a,#e2685f)}\n\n.how-it-works{display:flex;gap:8px;padding:10px 18px 0;flex-wrap:wrap}\n.step-chip{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted);background:#f2f6ff;border:1px solid #dfe8fb;border-radius:999px;padding:5px 11px 5px 6px}\n.step-chip b{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:var(--brand);color:#fff;font-size:10.5px}\n.step-arrow{color:#b7c3dc;font-size:13px;align-self:center}\n.section-hint{font-size:12px;color:var(--muted);margin:-4px 0 10px}\n\n.schedule-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;background:#fff}\n.schedule-row input.sr-name{flex:1;border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-size:13px}\n.schedule-row .sr-name-link{flex:1;text-align:left;background:transparent;border:0;padding:7px 9px;font-size:13px;font-weight:600;color:var(--brand);cursor:pointer;border-radius:8px}\n.schedule-row .sr-name-link:hover{background:#eef4fb;text-decoration:underline}\n.schedule-row .sr-name-edit{flex:1;border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-size:13px}\n.schedule-row .sr-meta{font-size:12px;color:var(--muted);white-space:nowrap}\n.schedule-row .sr-actions{display:flex;gap:6px}\n.schedule-row .sr-actions button{padding:6px 10px;font-size:12px}\n.schedule-row-wrap{margin-bottom:8px}\n.schedule-row-wrap .schedule-row{margin-bottom:0;border-radius:10px 10px 0 0}\n.schedule-row-wrap .schedule-row.expanded{border-color:var(--brand);border-bottom:0}\n.sr-caret{width:14px;color:var(--muted);font-size:11px}\n.schedule-holidays-panel{border:1px solid var(--brand);border-top:0;border-radius:0 0 10px 10px;background:#f8fbff;padding:10px 12px}\n.schedule-holidays-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:12px;color:var(--muted);font-weight:600}\n.mini-table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:8px;overflow:hidden}\n.mini-table th,.mini-table td{border-bottom:1px solid #edf2fa;padding:8px 9px;text-align:left;font-size:12.5px}\n.mini-table th{font-size:10.5px;color:var(--muted);text-transform:uppercase;background:#f9fbff}\n.mini-table tr:last-child td{border-bottom:0}\n.new-schedule-row{display:flex;gap:8px;margin-bottom:14px}\n.new-schedule-row input{flex:1;border:1px solid var(--line);border-radius:8px;padding:8px}\n.tabbar{display:flex;gap:4px;padding:10px 12px 0;background:#f8fbff}\n.tabbtn{display:inline-flex;align-items:center;gap:7px;background:transparent;border:0;border-bottom:2px solid transparent;border-radius:8px 8px 0 0;padding:9px 16px;font-weight:600;font-size:13px;color:var(--muted);cursor:pointer}\n.tabbtn .icon{display:inline-flex}\n.tabbtn .icon svg{width:16px;height:16px}\n.tabbtn:hover{background:#eef4fb;color:var(--txt)}\n.tabbtn.active{color:var(--brand);border-bottom-color:var(--brand);background:#fff}\n.tab-panel{display:none}\n.tab-panel.active{display:block}\n.schedules-panel{padding:12px}\n.schedules-panel .modal-subtitle{font-size:12px;color:var(--muted);margin:-4px 0 10px}\n</style>\n</head>\n<body>\n  <div class=\"card\">\n    <div class=\"head\">\n      <div><h1>Calendar Holidays</h1><div>Create, import, and assign holiday schedules to queues.</div></div>\n      <div class=\"stats\">\n        <div class=\"s\">Total<b id=\"total\">0</b></div>\n        <div class=\"s\">Visible<b id=\"visible\">0</b></div>\n        <div class=\"s\">Schedules<b id=\"cals\">0</b></div>\n      </div>\n    </div>\n\n    <div class=\"tabbar\">\n      <button class=\"tabbtn active\" id=\"tabBtnSchedules\" data-tab=\"schedules\"><span class=\"icon\"><svg viewBox=\"0 0 20 20\" fill=\"none\"><path d=\"M6.5 5.5h9M6.5 10h9M6.5 14.5h9\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\"/><circle cx=\"3.4\" cy=\"5.5\" r=\"1\" fill=\"currentColor\"/><circle cx=\"3.4\" cy=\"10\" r=\"1\" fill=\"currentColor\"/><circle cx=\"3.4\" cy=\"14.5\" r=\"1\" fill=\"currentColor\"/></svg></span>Schedules</button>\n      <button class=\"tabbtn\" id=\"tabBtnHolidays\" data-tab=\"holidays\"><span class=\"icon\"><svg viewBox=\"0 0 20 20\" fill=\"none\"><path d=\"M6 2.25v2M14 2.25v2M3.25 7.25h13.5M4.25 4.25h11.5a1 1 0 0 1 1 1v10.5a1 1 0 0 1-1 1H4.25a1 1 0 0 1-1-1V5.25a1 1 0 0 1 1-1Z\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></span>Holidays</button>\n    </div>\n\n    <div id=\"tabPanelHolidays\" class=\"tab-panel\">\n    <div class=\"tools\">\n      <div><label>Year</label><select id=\"year\"></select></div>\n      <div><label>Month</label><select id=\"month\"></select></div>\n      <div><label>Search</label><input id=\"q\" placeholder=\"Holiday, schedule, or queue\" /></div>\n      <div class=\"btns\">\n        <button class=\"sec\" id=\"reset\">Reset</button>\n        <button class=\"sec\" id=\"refresh\">Refresh</button>\n        <button class=\"pri\" id=\"openNew\">+ New Holiday</button>\n      </div>\n    </div>\n\n    <div class=\"body\">\n      <div class=\"status\" id=\"status\">Loading...</div>\n      <div class=\"bulk-bar\" id=\"bulkBar\"><span id=\"bulkCount\">0 selected</span><span class=\"spacer\"></span><button class=\"sec\" id=\"bulkClear\">Clear selection</button><button class=\"danger-btn\" id=\"bulkDelete\">Delete selected</button></div>\n      <table>\n        <thead><tr><th class=\"chk-col\"><input type=\"checkbox\" id=\"selectAll\" /></th><th>Holiday</th><th>Date</th><th>Schedule</th><th>Applied Queues</th><th>Duration</th><th>Actions</th></tr></thead>\n        <tbody id=\"rows\"></tbody>\n      </table>\n      <div class=\"empty\" id=\"empty\">No holidays for current filters.</div>\n    </div>\n    </div>\n\n    <div id=\"tabPanelSchedules\" class=\"tab-panel active\">\n      <div class=\"schedules-panel\">\n        <div class=\"modal-subtitle\">Click a schedule's name to view and manage its holidays. You can also rename or remove a schedule here.</div>\n        <div class=\"new-schedule-row\">\n          <input id=\"newScheduleRowName\" placeholder=\"New schedule name\" />\n          <button class=\"pri\" id=\"newScheduleRowAdd\">+ Create</button>\n        </div>\n        <div id=\"schedulesList\"></div>\n      </div>\n    </div>\n  </div>\n\n  <div class=\"modal-backdrop\" id=\"modalBackdrop\">\n    <div class=\"modal\">\n      <div class=\"modal-head\">\n        <h2 id=\"modalTitle\"><span class=\"icon\"><svg viewBox=\"0 0 20 20\" fill=\"none\"><path d=\"M6 2.25v2M14 2.25v2M3.25 7.25h13.5M4.25 4.25h11.5a1 1 0 0 1 1 1v10.5a1 1 0 0 1-1 1H4.25a1 1 0 0 1-1-1V5.25a1 1 0 0 1 1-1Z\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></span>New Holiday</h2>\n        <button class=\"sec\" id=\"modalClose\"><span class=\"icon\"><svg viewBox=\"0 0 20 20\" fill=\"none\"><path d=\"M5 5l10 10M15 5 5 15\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\"/></svg></span></button>\n      </div>\n      <div class=\"modal-subtitle\">Create a holiday, import from a country's public holiday calendar, and assign it to queues.</div>\n      <div class=\"how-it-works\">\n        <span class=\"step-chip\"><b>1</b>Choose or create a schedule</span>\n        <span class=\"step-arrow\">&#8594;</span>\n        <span class=\"step-chip\"><b>2</b>Add holidays to it</span>\n        <span class=\"step-arrow\">&#8594;</span>\n        <span class=\"step-chip\"><b>3</b>Apply the schedule to queues</span>\n      </div>\n      <div class=\"modal-body\">\n        <div class=\"section-card\">\n          <div class=\"section-label\"><span class=\"icon\"><svg viewBox=\"0 0 20 20\" fill=\"none\"><path d=\"M3 6.25a1 1 0 0 1 1-1h3.6l1.3 1.75H16a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Z\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linejoin=\"round\"/></svg></span>Holiday Schedule</div>\n          <div class=\"section-hint\">A schedule is a reusable holiday calendar — create one, fill it with holidays, then apply it to any number of queues.</div>\n          <div class=\"field\">\n            <select id=\"scheduleSelect\"></select>\n          </div>\n          <div class=\"field\" id=\"newScheduleNameWrap\" style=\"display:none;margin-top:10px\">\n            <label>New schedule name</label>\n            <input id=\"newScheduleName\" placeholder=\"e.g. US Public Holidays 2026\" />\n          </div>\n        </div>\n\n        <div class=\"section-card\">\n          <div class=\"section-label\"><span class=\"icon\"><svg viewBox=\"0 0 20 20\" fill=\"none\"><circle cx=\"10\" cy=\"10\" r=\"7.25\" stroke=\"currentColor\" stroke-width=\"1.4\"/><path d=\"M10 6.75v6.5M6.75 10h6.5\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\"/></svg></span>Add Holidays</div>\n          <div class=\"section-hint\">Holidays added here go into the schedule selected above.</div>\n          <div class=\"segmented\" role=\"tablist\">\n            <div class=\"tab active\" data-tab=\"custom\"><span class=\"icon\"><svg viewBox=\"0 0 20 20\" fill=\"none\"><path d=\"M13.4 3.4a1.4 1.4 0 0 1 2 0l1.2 1.2a1.4 1.4 0 0 1 0 2L7.4 15.8l-3.4.8.8-3.4Z\" stroke=\"currentColor\" stroke-width=\"1.3\" stroke-linejoin=\"round\"/></svg></span>Custom</div>\n            <div class=\"tab\" data-tab=\"import\"><span class=\"icon\"><svg viewBox=\"0 0 20 20\" fill=\"none\"><circle cx=\"10\" cy=\"10\" r=\"7.25\" stroke=\"currentColor\" stroke-width=\"1.4\"/><path d=\"M2.9 10h14.2M10 2.9c2.1 2 2.1 12.2 0 14.2M10 2.9c-2.1 2-2.1 12.2 0 14.2\" stroke=\"currentColor\" stroke-width=\"1.2\"/></svg></span>Import from Country</div>\n          </div>\n\n          <div class=\"tabpane active\" id=\"tab-custom\" style=\"margin-top:12px\">\n            <div class=\"field\"><label>Holiday name</label><input id=\"customName\" placeholder=\"e.g. Company Founding Day\" /></div>\n            <div class=\"field\"><label>Date</label><input id=\"customDate\" type=\"date\" /></div>\n            <div class=\"hint\">Leave blank if you only want to change queue assignment for the selected schedule.</div>\n          </div>\n\n          <div class=\"tabpane\" id=\"tab-import\" style=\"margin-top:12px\">\n            <div class=\"import-grid\">\n              <div class=\"field\"><label>Country</label><select id=\"countrySelect\"></select></div>\n              <div class=\"field\"><label>Year</label><input id=\"usYear\" type=\"number\" /></div>\n              <div class=\"field\"><label>Filter</label><input id=\"usFilter\" placeholder=\"Filter holiday name\" /></div>\n              <button class=\"sec\" id=\"usFetch\">Fetch</button>\n            </div>\n            <div class=\"hint\" id=\"usHint\">Source: date.nager.at public holiday API — global coverage, 100+ countries.</div>\n            <div class=\"us-list\" id=\"usList\"></div>\n          </div>\n        </div>\n\n        <div class=\"section-card\" id=\"queuesSection\">\n          <div class=\"section-label\"><span class=\"icon\"><svg viewBox=\"0 0 20 20\" fill=\"none\"><path d=\"M10.7 3.25H5.25a1 1 0 0 0-1 1v5.45a1 1 0 0 0 .3.7l6.9 6.9a1 1 0 0 0 1.4 0l4.25-4.25a1 1 0 0 0 0-1.4l-6.9-6.9a1 1 0 0 0-.45-.5Z\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linejoin=\"round\"/><circle cx=\"7.3\" cy=\"6.8\" r=\"0.9\" fill=\"currentColor\"/></svg></span>Apply to Queues</div>\n          <div class=\"queue-toolbar\"><input id=\"queueFilter\" placeholder=\"Search queues\" /></div>\n          <div class=\"queue-list\" id=\"queueList\"></div>\n          <div class=\"section-hint\" style=\"margin-top:14px\">Selected queues will use every holiday in this schedule as non-working days.</div>\n          <div class=\"hint\">Queues without configured Operating Hours cannot be linked here; set up Operating Hours for that queue in Dynamics 365 first.</div>\n        </div>\n\n        <div class=\"status\" id=\"modalStatus\" style=\"display:none\"></div>\n      </div>\n      <div class=\"modal-actions\">\n        <button class=\"sec\" id=\"modalCancel\">Cancel</button>\n        <button class=\"pri\" id=\"modalSave\">Save</button>\n      </div>\n    </div>\n  </div>\n\n  <div class=\"modal-backdrop\" id=\"confirmBackdrop\">\n    <div class=\"modal confirm\">\n      <div class=\"modal-head danger\">\n        <h2 id=\"confirmTitle\"><span class=\"icon\"><svg viewBox=\"0 0 20 20\" fill=\"none\"><path d=\"M4 6h12M8 6V4.5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1V6M5.5 6l.6 9.4a1 1 0 0 0 1 .9h5.8a1 1 0 0 0 1-.9L14.5 6\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M8.3 9v4.2M11.7 9v4.2\" stroke=\"currentColor\" stroke-width=\"1.3\" stroke-linecap=\"round\"/></svg></span>Delete holiday</h2>\n        <button class=\"sec\" id=\"confirmClose\"><span class=\"icon\"><svg viewBox=\"0 0 20 20\" fill=\"none\"><path d=\"M5 5l10 10M15 5 5 15\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\"/></svg></span></button>\n      </div>\n      <div class=\"modal-body\">\n        <div>This will permanently remove the following from Dynamics 365:</div>\n        <div class=\"confirm-list\" id=\"confirmList\"></div>\n      </div>\n      <div class=\"modal-actions\">\n        <button class=\"sec\" id=\"confirmCancel\">Cancel</button>\n        <button class=\"danger-btn\" id=\"confirmDeleteBtn\">Delete</button>\n      </div>\n    </div>\n  </div>\n\n<script>\n(() => {\n  const S = { schedules: [], rows: [], filtered: [], queues: [], queueMap: {}, reverseMap: {}, usHolidays: [], selected: new Set(), pendingDelete: [], editingId: null, modalScheduleId: null };\n  const months = ['All months','January','February','March','April','May','June','July','August','September','October','November','December'];\n\n  const el = id => document.getElementById(id);\n  const baseUrl = () => {\n    try {\n      const x = window.parent && window.parent.Xrm;\n      if (x && x.Utility && x.Utility.getGlobalContext) return x.Utility.getGlobalContext().getClientUrl();\n    } catch (_) {}\n    return window.location.origin;\n  };\n\n  const setStatus = (msg, mode) => {\n    const s = el('status');\n    s.textContent = msg;\n    s.className = 'status' + (mode ? ' ' + mode : '');\n  };\n  const setModalStatus = (msg, mode) => {\n    const s = el('modalStatus');\n    if (!msg) { s.style.display = 'none'; s.textContent=''; return; }\n    s.style.display = 'block';\n    s.textContent = msg;\n    s.className = 'status' + (mode ? ' ' + mode : '');\n  };\n\n  const api = async (path, opts) => {\n    const r = await fetch(baseUrl() + '/api/data/v9.2/' + path, Object.assign({\n      headers: Object.assign({ Accept: 'application/json', 'OData-MaxVersion':'4.0', 'OData-Version':'4.0' }, (opts && opts.headers) || {})\n    }, opts || {}));\n    if (!r.ok) throw new Error((opts && opts.method || 'GET') + ' ' + path + ' -> ' + r.status + ': ' + await r.text());\n    if (r.status === 204) return null;\n    return r.json();\n  };\n\n  const esc = v => String(v||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');\n  const fmtDate = d => d ? new Intl.DateTimeFormat(undefined,{year:'numeric',month:'short',day:'2-digit',timeZone:'UTC'}).format(d) : 'No date';\n  const fmtDur = m => m==null ? '-' : (m===1439||m===1440 ? 'Full day' : (Math.floor(m/60)+'h '+(m%60)+'m'));\n  const isoDay = (y,m,d) => new Date(Date.UTC(y,m-1,d,0,0,0)).toISOString();\n\n  let whoAmIBusinessUnitId = null;\n  const getBusinessUnitId = async () => {\n    if (whoAmIBusinessUnitId) return whoAmIBusinessUnitId;\n    const who = await api('WhoAmI');\n    whoAmIBusinessUnitId = who.BusinessUnitId;\n    return whoAmIBusinessUnitId;\n  };\n\n  // ---------- data loading ----------\n\n  const loadQueues = async () => {\n    const j = await api(\"queues?$select=queueid,name,_msdyn_operatinghourid_value&$filter=statecode eq 0&$top=1000\");\n    return (j.value || []).filter(q => q.name && !/^</.test(q.name));\n  };\n\n  const loadOperatingHourCalendarMap = async (ohIds) => {\n    const map = {};\n    const unique = [...new Set(ohIds.filter(Boolean))];\n    const batch = 12;\n    for (let i=0;i<unique.length;i+=batch) {\n      const part = unique.slice(i,i+batch);\n      const res = await Promise.all(part.map(async id => {\n        try { const r = await api(`msdyn_operatinghours(${id})?$select=msdyn_operatinghourid,msdyn_calendarid`); return {id, calId:r.msdyn_calendarid}; }\n        catch(_) { return {id, calId:null}; }\n      }));\n      res.forEach(r => map[r.id] = r.calId);\n    }\n    return map;\n  };\n\n  const loadBusinessCalendarHolidayMap = async (calIds) => {\n    const map = {};\n    const unique = [...new Set(calIds.filter(Boolean))];\n    const batch = 12;\n    for (let i=0;i<unique.length;i+=batch) {\n      const part = unique.slice(i,i+batch);\n      const res = await Promise.all(part.map(async id => {\n        try { const r = await api(`calendars(${id})?$select=calendarid,_holidayschedulecalendarid_value`); return {id, scheduleId:r._holidayschedulecalendarid_value}; }\n        catch(_) { return {id, scheduleId:null}; }\n      }));\n      res.forEach(r => map[r.id] = r.scheduleId);\n    }\n    return map;\n  };\n\n  const buildQueueRelationships = async () => {\n    setStatus('Resolving queue operating hours...');\n    const queues = await loadQueues();\n    const ohMap = await loadOperatingHourCalendarMap(queues.map(q => q._msdyn_operatinghourid_value));\n    const businessCalIds = Object.values(ohMap);\n    const scheduleMap = await loadBusinessCalendarHolidayMap(businessCalIds);\n\n    const reverseMap = {};\n    const queueInfo = {};\n    queues.forEach(q => {\n      const ohId = q._msdyn_operatinghourid_value;\n      const businessCalId = ohId ? ohMap[ohId] : null;\n      const scheduleId = businessCalId ? scheduleMap[businessCalId] : null;\n      queueInfo[q.queueid] = { name: q.name, businessCalId, scheduleId };\n      if (scheduleId) {\n        (reverseMap[scheduleId] = reverseMap[scheduleId] || []).push({ queueId: q.queueid, queueName: q.name });\n      }\n    });\n\n    S.queues = queues.map(q => ({ id: q.queueid, name: q.name, businessCalId: queueInfo[q.queueid].businessCalId }));\n    S.queueMap = queueInfo;\n    S.reverseMap = reverseMap;\n  };\n\n  const loadSchedules = async () => {\n    const j = await api(\"calendars?$select=calendarid,name,type&$filter=type eq 2&$top=250\");\n    const cals = j.value || [];\n    const withRules = await Promise.all(cals.map(async cal => {\n      try {\n        const rr = await api(`calendars(${cal.calendarid})/calendar_calendar_rules?$select=calendarruleid,name,description,timecode,starttime,effectiveintervalstart,duration`);\n        return Object.assign({}, cal, { calendar_calendar_rules: rr.value || [] });\n      } catch (_) {\n        return Object.assign({}, cal, { calendar_calendar_rules: [] });\n      }\n    }));\n    return withRules;\n  };\n\n  const load = async () => {\n    setStatus('Loading holiday schedules and queue assignments...');\n    await buildQueueRelationships();\n    const schedules = await loadSchedules();\n    S.schedules = schedules;\n\n    const rows = [];\n    schedules.forEach(cal => {\n      (cal.calendar_calendar_rules || []).forEach(r => {\n        if (r.timecode !== 2) return;\n        const iso = r.starttime || r.effectiveintervalstart || null;\n        const countryMatch = /\\(([A-Z]{2})\\)\\s*$/.exec(r.description || '');\n        rows.push({\n          id: r.calendarruleid,\n          title: r.name || 'Holiday',\n          date: iso ? new Date(iso) : null,\n          scheduleId: cal.calendarid,\n          scheduleName: cal.name || '(Unnamed schedule)',\n          duration: r.duration ?? null,\n          countryCode: countryMatch ? countryMatch[1] : null\n        });\n      });\n    });\n\n    S.rows = rows.sort((a,b) => (a.date?a.date.getTime():0) - (b.date?b.date.getTime():0));\n    buildFilters();\n    apply();\n    renderSchedulesList();\n    setStatus('Loaded ' + S.rows.length + ' holidays across ' + S.schedules.length + ' holiday schedule(s).', 'ok');\n  };\n\n  // ---------- filters / render ----------\n\n  const buildFilters = () => {\n    const ys = [...new Set(S.rows.map(x => x.date ? x.date.getUTCFullYear() : null).filter(Boolean))].sort((a,b)=>a-b);\n    el('year').innerHTML = '<option value=\"all\">All years</option>' + ys.map(y => `<option value=\"${y}\">${y}</option>`).join('');\n    el('month').innerHTML = months.map((m,i) => `<option value=\"${i===0?'all':i}\">${m}</option>`).join('');\n  };\n\n  const appliedQueueNames = scheduleId => (S.reverseMap[scheduleId] || []).map(x => x.queueName);\n\n  const render = () => {\n    el('total').textContent = String(S.rows.length);\n    el('visible').textContent = String(S.filtered.length);\n    el('cals').textContent = String(S.schedules.length);\n\n    if (!S.filtered.length) { el('rows').innerHTML = ''; el('empty').style.display = 'block'; return; }\n    el('empty').style.display = 'none';\n\n    el('rows').innerHTML = S.filtered.map(it => {\n      const queues = appliedQueueNames(it.scheduleId);\n      const queueHtml = queues.length\n        ? queues.map(n => `<span class=\"chip\">${esc(n)}</span>`).join('')\n        : `<span class=\"chip warn\">Not applied</span>`;\n      return `<tr>\n        <td class=\"chk-col\"><input type=\"checkbox\" class=\"rowcheck\" data-id=\"${it.id}\" ${S.selected.has(it.id) ? 'checked' : ''} /></td>\n        <td><strong>${esc(it.title)}</strong></td>\n        <td>${fmtDate(it.date)}</td>\n        <td>${esc(it.scheduleName)}</td>\n        <td>${queueHtml}</td>\n        <td>${fmtDur(it.duration)}</td>\n        <td class=\"rowactions\">\n          <button class=\"sec\" data-edit=\"${it.id}\" title=\"Edit this holiday and its queue assignment\">Edit</button>\n          <button class=\"danger-btn\" data-delete=\"${it.id}\">Delete</button>\n        </td>\n      </tr>`;\n    }).join('');\n    updateBulkBar();\n    const allChecked = S.filtered.length > 0 && S.filtered.every(it => S.selected.has(it.id));\n    el('selectAll').checked = allChecked;\n  };\n\n  const updateBulkBar = () => {\n    const n = S.selected.size;\n    el('bulkBar').classList.toggle('show', n > 0);\n    el('bulkCount').textContent = n + (n === 1 ? ' holiday selected' : ' holidays selected');\n  };\n\n  const apply = () => {\n    const y = el('year').value, m = el('month').value, q = el('q').value.trim().toLowerCase();\n    S.filtered = S.rows.filter(it => {\n      const yy = it.date ? it.date.getUTCFullYear() : null;\n      const mm = it.date ? (it.date.getUTCMonth()+1) : null;\n      const ymOk = (y === 'all' || yy === Number(y)) && (m === 'all' || mm === Number(m));\n      const hay = (it.title + ' ' + it.scheduleName + ' ' + appliedQueueNames(it.scheduleId).join(' ')).toLowerCase();\n      return ymOk && (!q || hay.includes(q));\n    });\n    render();\n  };\n\n  // ---------- modal ----------\n\n  const MODAL_CALENDAR_ICON = '<span class=\"icon\"><svg viewBox=\"0 0 20 20\" fill=\"none\"><path d=\"M6 2.25v2M14 2.25v2M3.25 7.25h13.5M4.25 4.25h11.5a1 1 0 0 1 1 1v10.5a1 1 0 0 1-1 1H4.25a1 1 0 0 1-1-1V5.25a1 1 0 0 1 1-1Z\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></span>';\n  const EDIT_ICON_HTML = '<span class=\"icon\"><svg viewBox=\"0 0 20 20\" fill=\"none\"><path d=\"M13.4 3.4a1.4 1.4 0 0 1 2 0l1.2 1.2a1.4 1.4 0 0 1 0 2L7.4 15.8l-3.4.8.8-3.4Z\" stroke=\"currentColor\" stroke-width=\"1.3\" stroke-linejoin=\"round\"/></svg></span>';\n  const modal = { scheduleId: null };\n\n  const openModal = (presetScheduleId) => {\n    S.editingId = null;\n    el('modalTitle').innerHTML = MODAL_CALENDAR_ICON + 'New Holiday';\n    el('scheduleSelect').disabled = false;\n    document.querySelector('.segmented').style.display = '';\n    el('queuesSection').style.display = '';\n    el('scheduleSelect').innerHTML = '<option value=\"__new__\">+ Create new schedule</option>' +\n      S.schedules.map(s => `<option value=\"${s.calendarid}\">${esc(s.name || '(Unnamed schedule)')}</option>`).join('');\n    if (presetScheduleId) el('scheduleSelect').value = presetScheduleId;\n    S.modalScheduleId = el('scheduleSelect').value === '__new__' ? null : el('scheduleSelect').value;\n    toggleNewScheduleField();\n\n    el('customName').value = '';\n    el('customDate').value = '';\n    el('usFilter').value = '';\n    el('usYear').value = new Date().getFullYear();\n    el('usList').innerHTML = '';\n    S.usHolidays = [];\n    setActiveTab('custom');\n    setModalStatus('');\n    renderQueueList();\n    loadCountries();\n    el('modalBackdrop').classList.add('show');\n    document.body.classList.add('modal-open');\n  };\n\n  const openEditModal = (ruleId) => {\n    const row = S.rows.find(r => r.id === ruleId);\n    if (!row) return;\n    openModal(row.scheduleId);\n    S.editingId = ruleId;\n    el('modalTitle').innerHTML = EDIT_ICON_HTML + 'Edit Holiday';\n    el('scheduleSelect').disabled = true;\n    document.querySelector('.segmented').style.display = 'none';\n    S.modalScheduleId = row.scheduleId;\n    renderQueueList();\n    setActiveTab('custom');\n    el('customName').value = row.title;\n    if (row.date) {\n      const yyyy = row.date.getUTCFullYear(), mm = String(row.date.getUTCMonth()+1).padStart(2,'0'), dd = String(row.date.getUTCDate()).padStart(2,'0');\n      el('customDate').value = `${yyyy}-${mm}-${dd}`;\n    }\n  };\n  const closeModal = () => { el('modalBackdrop').classList.remove('show'); document.body.classList.remove('modal-open'); };\n\n  const toggleNewScheduleField = () => {\n    el('newScheduleNameWrap').style.display = el('scheduleSelect').value === '__new__' ? 'block' : 'none';\n  };\n\n  const setActiveTab = tab => {\n    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));\n    el('tab-custom').classList.toggle('active', tab === 'custom');\n    el('tab-import').classList.toggle('active', tab === 'import');\n  };\n\n  const renderQueueList = () => {\n    const filterText = el('queueFilter').value.trim().toLowerCase();\n    const appliedSet = new Set((S.reverseMap[S.modalScheduleId] || []).map(x => x.queueId));\n    const list = S.queues.filter(q => !filterText || q.name.toLowerCase().includes(filterText)).slice(0, 200);\n    el('queueList').innerHTML = list.map(q => {\n      const disabled = !q.businessCalId;\n      const checked = appliedSet.has(q.id);\n      return `<label class=\"queue-item ${disabled ? 'disabled' : ''}\">\n        <input type=\"checkbox\" data-queue=\"${q.id}\" ${disabled ? 'disabled' : ''} ${checked ? 'checked' : ''} />\n        <span>${esc(q.name)}</span>\n        ${disabled ? '<small>No operating hours configured</small>' : ''}\n      </label>`;\n    }).join('') || '<div class=\"hint\" style=\"padding:10px\">No queues match.</div>';\n  };\n\n  // Fallback holiday data (used only if the live public API call fails).\n  const COUNTRY_FALLBACKS = {\n    US: (year) => ([\n      [\"New Year's Day\", `${year}-01-01`],\n      [\"Martin Luther King, Jr. Day\", null],\n      [\"Washington's Birthday\", null],\n      [\"Memorial Day\", null],\n      [\"Juneteenth National Independence Day\", `${year}-06-19`],\n      [\"Independence Day\", `${year}-07-04`],\n      [\"Labor Day\", null],\n      [\"Columbus Day\", null],\n      [\"Veterans Day\", `${year}-11-11`],\n      [\"Thanksgiving Day\", null],\n      [\"Christmas Day\", `${year}-12-25`]\n    ]).filter(x => x[1]).map(([name,date]) => ({ name, date }))\n  };\n\n  const COUNTRY_LIST_FALLBACK = [\n    {countryCode:'US',name:'United States'},{countryCode:'GB',name:'United Kingdom'},{countryCode:'CA',name:'Canada'},\n    {countryCode:'BR',name:'Brazil'},{countryCode:'MX',name:'Mexico'},{countryCode:'DE',name:'Germany'},\n    {countryCode:'FR',name:'France'},{countryCode:'ES',name:'Spain'},{countryCode:'IT',name:'Italy'},\n    {countryCode:'PT',name:'Portugal'},{countryCode:'NL',name:'Netherlands'},{countryCode:'IE',name:'Ireland'},\n    {countryCode:'AU',name:'Australia'},{countryCode:'NZ',name:'New Zealand'},{countryCode:'IN',name:'India'},\n    {countryCode:'JP',name:'Japan'},{countryCode:'CN',name:'China'},{countryCode:'ZA',name:'South Africa'},\n    {countryCode:'AR',name:'Argentina'},{countryCode:'CL',name:'Chile'},{countryCode:'CO',name:'Colombia'},\n    {countryCode:'CH',name:'Switzerland'},{countryCode:'SE',name:'Sweden'},{countryCode:'NO',name:'Norway'},\n    {countryCode:'DK',name:'Denmark'},{countryCode:'FI',name:'Finland'},{countryCode:'PL',name:'Poland'},\n    {countryCode:'AT',name:'Austria'},{countryCode:'BE',name:'Belgium'},{countryCode:'SG',name:'Singapore'}\n  ];\n\n  const COUNTRY_NAME_BY_CODE = Object.fromEntries(COUNTRY_LIST_FALLBACK.map(c => [c.countryCode, c.name]));\n  const countryName = (code) => COUNTRY_NAME_BY_CODE[code] || code;\n  let countriesLoaded = false;\n  const loadCountries = async () => {\n    if (countriesLoaded) return;\n    let list = COUNTRY_LIST_FALLBACK;\n    try {\n      const r = await fetch('https://date.nager.at/api/v3/AvailableCountries');\n      if (r.ok) list = (await r.json()).sort((a,b) => a.name.localeCompare(b.name));\n    } catch (_) {}\n    el('countrySelect').innerHTML = list.map(c => `<option value=\"${c.countryCode}\" ${c.countryCode==='US'?'selected':''}>${esc(c.name)}</option>`).join('');\n    countriesLoaded = true;\n  };\n\n  const fetchHolidaysForCountry = async (year, countryCode) => {\n    try {\n      const r = await fetch(`https://date.nager.at/api/v3/publicholidays/${year}/${countryCode}`);\n      if (!r.ok) throw new Error('status ' + r.status);\n      const j = await r.json();\n      return j.map(h => ({ name: h.localName || h.name, date: h.date }));\n    } catch (e) {\n      const fb = COUNTRY_FALLBACKS[countryCode];\n      return fb ? fb(year) : [];\n    }\n  };\n\n  const renderUsList = () => {\n    const filterText = el('usFilter').value.trim().toLowerCase();\n    const list = S.usHolidays.filter(h => !filterText || h.name.toLowerCase().includes(filterText));\n    el('usList').innerHTML = list.map((h,i) => `\n      <label class=\"us-item\">\n        <input type=\"checkbox\" data-us=\"${h.date}|${esc(h.name)}\" />\n        <span class=\"d\">${h.date}</span>\n        <span>${esc(h.name)}</span>\n      </label>`).join('') || '<div class=\"hint\" style=\"padding:10px\">No results. Try fetching first.</div>';\n  };\n\n  // ---------- write operations ----------\n  // calendarrule supports neither Create/Update/Delete directly nor deep update,\n  // so every change re-creates the schedule in one deep insert and relinks its queues.\n\n  const buildRule = (name, dateIsoDay, countryCode) => {\n    const start = dateIsoDay;\n    const end = new Date(new Date(start).getTime() + 24*60*60*1000).toISOString();\n    return {\n      name,\n      description: countryCode ? `Holiday Rule (${countryCode})` : 'Holiday Rule',\n      timecode: 2, rank: 0, subcode: 5, extentcode: 2, issimple: false,\n      starttime: start, effectiveintervalstart: start, effectiveintervalend: end,\n      duration: 1440, pattern: 'FREQ=DAILY;INTERVAL=1;COUNT=1'\n    };\n  };\n\n  const existingRulesFor = (scheduleId, { excludeIds = [], editRule = null } = {}) =>\n    S.rows\n      .filter(r => r.scheduleId === scheduleId && !excludeIds.includes(r.id))\n      .map(r => {\n        const isEdit = editRule && editRule.ruleId === r.id;\n        const name = isEdit ? editRule.name : r.title;\n        const dateIso = isEdit ? editRule.date : (r.date ? r.date.toISOString() : null);\n        return dateIso ? buildRule(name, dateIso, r.countryCode) : null;\n      })\n      .filter(Boolean);\n\n  const applyScheduleToQueue = async (businessCalId, scheduleId) => {\n    const r = await fetch(baseUrl() + `/api/data/v9.2/calendars(${businessCalId})`, {\n      method: 'PATCH',\n      headers: { 'Content-Type': 'application/json', 'If-Match': '*' },\n      body: JSON.stringify({ 'holidayschedulecalendarid@odata.bind': `/calendars(${scheduleId})` })\n    });\n    if (!r.ok) throw new Error(await r.text());\n  };\n\n  const clearScheduleFromQueue = async (businessCalId) => {\n    try { await fetch(baseUrl() + `/api/data/v9.2/calendars(${businessCalId})/holidayschedulecalendarid/$ref`, { method: 'DELETE' }); }\n    catch (_) {}\n  };\n\n  const reconcileQueues = async (previousIds, checkedIds) => {\n    const toRemove = previousIds.filter(qid => !checkedIds.includes(qid));\n    for (const qid of toRemove) {\n      const info = S.queueMap[qid];\n      if (info && info.businessCalId) await clearScheduleFromQueue(info.businessCalId);\n    }\n  };\n\n  const commitSchedule = async ({ scheduleId, scheduleName, rules, linkedQueueIds = [] }) => {\n    const buId = await getBusinessUnitId();\n    const payload = { name: scheduleName, type: 2, 'businessunitid@odata.bind': `/businessunits(${buId})` };\n    if (rules.length) payload.calendar_calendar_rules = rules;\n\n    const created = await fetch(baseUrl() + '/api/data/v9.2/calendars', {\n      method: 'POST',\n      headers: { 'Content-Type': 'application/json', 'Prefer': 'return=representation' },\n      body: JSON.stringify(payload)\n    });\n    if (!created.ok) throw new Error('Failed to save schedule: ' + await created.text());\n    const newScheduleId = (await created.json()).calendarid;\n\n    for (const qid of linkedQueueIds) {\n      const info = S.queueMap[qid];\n      if (info && info.businessCalId) {\n        try { await applyScheduleToQueue(info.businessCalId, newScheduleId); } catch (_) {}\n      }\n    }\n\n    if (scheduleId) { try { await api(`calendars(${scheduleId})`, { method: 'DELETE' }); } catch (_) {} }\n    return newScheduleId;\n  };\n\n  const onSave = async () => {\n    setModalStatus('Saving...');\n    try {\n      if (S.editingId) {\n        const name = el('customName').value.trim();\n        const dateVal = el('customDate').value;\n        if (!name || !dateVal) throw new Error('Enter a holiday name and date.');\n        const [ey,em,ed] = dateVal.split('-').map(Number);\n        const start = isoDay(ey,em,ed);\n        const row = S.rows.find(r => r.id === S.editingId);\n        if (!row) throw new Error('Holiday not found; refresh and try again.');\n        const sched = S.schedules.find(s => s.calendarid === row.scheduleId);\n        const prevQueueIds = (S.reverseMap[row.scheduleId] || []).map(q => q.queueId);\n        const checkedQueueIds = [...document.querySelectorAll('#queueList input[type=checkbox]:checked')].map(cb => cb.dataset.queue);\n        await reconcileQueues(prevQueueIds, checkedQueueIds);\n        await commitSchedule({\n          scheduleId: row.scheduleId,\n          scheduleName: (sched && sched.name) || row.scheduleName,\n          rules: existingRulesFor(row.scheduleId, { editRule: { ruleId: S.editingId, name, date: start } }),\n          linkedQueueIds: checkedQueueIds\n        });\n        await load();\n        closeModal();\n        setStatus('Holiday updated.', 'ok');\n        return;\n      }\n\n      const sel = el('scheduleSelect').value;\n      const isNew = sel === '__new__';\n      const picked = S.schedules.find(s => s.calendarid === sel);\n      const scheduleName = isNew ? el('newScheduleName').value.trim() : ((picked && picked.name) || 'Holiday Schedule');\n      if (isNew && !scheduleName) throw new Error('Enter a name for the new holiday schedule.');\n\n      const newRules = [];\n      const activeTab = document.querySelector('.tab.active').dataset.tab;\n      if (activeTab === 'custom') {\n        const name = el('customName').value.trim();\n        const dateVal = el('customDate').value;\n        if (name && dateVal) {\n          const [cy,cm,cd] = dateVal.split('-').map(Number);\n          newRules.push(buildRule(name, isoDay(cy,cm,cd), null));\n        }\n      } else {\n        const cc = el('countrySelect').value || null;\n        [...document.querySelectorAll('#usList input[type=checkbox]:checked')].forEach(cb => {\n          const [date, nm] = cb.dataset.us.split('|');\n          const [iy,im,idd] = date.split('-').map(Number);\n          newRules.push(buildRule(nm, isoDay(iy,im,idd), cc));\n        });\n      }\n\n      const existing = isNew ? [] : existingRulesFor(sel);\n      const seen = new Set(existing.map(r => r.name + '|' + r.starttime.slice(0,10)));\n      const merged = existing.slice();\n      let skipped = 0;\n      newRules.forEach(r => {\n        const key = r.name + '|' + r.starttime.slice(0,10);\n        if (seen.has(key)) { skipped++; return; }\n        seen.add(key);\n        merged.push(r);\n      });\n      const added = merged.length - existing.length;\n\n      const checkedQueueIds = [...document.querySelectorAll('#queueList input[type=checkbox]:checked')].map(cb => cb.dataset.queue);\n      const prevQueueIds = isNew ? [] : (S.reverseMap[sel] || []).map(q => q.queueId);\n\n      if (!merged.length && !checkedQueueIds.length) throw new Error('Add at least one holiday or select a queue.');\n\n      await reconcileQueues(prevQueueIds, checkedQueueIds);\n      await commitSchedule({ scheduleId: isNew ? null : sel, scheduleName, rules: merged, linkedQueueIds: checkedQueueIds });\n      const summary = `Saved. Holidays added: ${added}${skipped ? ', skipped duplicates: ' + skipped : ''}. Queues linked: ${checkedQueueIds.length}.`;\n      await load();\n      closeModal();\n      setStatus(summary, 'ok');\n    } catch (e) {\n      setModalStatus(String(e.message || e), 'err');\n    }\n  };\n\n  let scheduleDeleteArmed = null;\n  let expandedScheduleId = null;\n\n  const scheduleHolidaysPanelHtml = (s) => {\n    const items = S.rows.filter(r => r.scheduleId === s.calendarid);\n    const rowsHtml = items.length ? items.map(it => `\n      <tr>\n        <td><strong>${esc(it.title)}</strong></td>\n        <td>${fmtDate(it.date)}</td>\n        <td>${fmtDur(it.duration)}</td>\n        <td class=\"rowactions\">\n          <button class=\"sec\" data-schedule-edit=\"${it.id}\">Edit</button>\n          <button class=\"danger-btn\" data-schedule-delete=\"${it.id}\">Delete</button>\n        </td>\n      </tr>`).join('') : '<tr><td colspan=\"4\" class=\"hint\" style=\"padding:10px\">No holidays in this schedule yet.</td></tr>';\n    return `<div class=\"schedule-holidays-panel\">\n      <div class=\"schedule-holidays-head\">\n        <span>Holidays in this schedule</span>\n        <button class=\"pri\" data-schedule-add=\"${s.calendarid}\">+ Add holiday</button>\n      </div>\n      <table class=\"mini-table\">\n        <thead><tr><th>Holiday</th><th>Date</th><th>Duration</th><th>Actions</th></tr></thead>\n        <tbody>${rowsHtml}</tbody>\n      </table>\n    </div>`;\n  };\n\n  const scheduleRowHtml = (s) => {\n    const holidayCount = S.rows.filter(r => r.scheduleId === s.calendarid).length;\n    const queueCount = (S.reverseMap[s.calendarid] || []).length;\n    const armed = scheduleDeleteArmed === s.calendarid;\n    const expanded = expandedScheduleId === s.calendarid;\n    return `<div class=\"schedule-row-wrap\" data-schedule-wrap=\"${s.calendarid}\">\n      <div class=\"schedule-row${expanded ? ' expanded' : ''}\" data-schedule=\"${s.calendarid}\">\n        <span class=\"sr-caret\">${expanded ? '▾' : '▸'}</span>\n        <button type=\"button\" class=\"sr-name-link\" title=\"Click to view and manage this schedule's holidays\">${esc(s.name || '(untitled schedule)')}</button>\n        <span class=\"sr-meta\">${holidayCount} holiday${holidayCount === 1 ? '' : 's'} · ${queueCount} queue${queueCount === 1 ? '' : 's'}</span>\n        <span class=\"sr-actions\">\n          <button class=\"sec sr-rename\">Rename</button>\n          <button class=\"danger-btn sr-delete\">${armed ? 'Click again to confirm' : 'Delete'}</button>\n        </span>\n      </div>\n      ${expanded ? scheduleHolidaysPanelHtml(s) : ''}\n    </div>`;\n  };\n\n  const renderSchedulesList = () => {\n    el('schedulesList').innerHTML = S.schedules.map(scheduleRowHtml).join('') || '<div class=\"hint\" style=\"padding:10px\">No holiday schedules yet.</div>';\n  };\n\n  const enterRenameMode = (scheduleId) => {\n    const row = document.querySelector(`.schedule-row[data-schedule=\"${scheduleId}\"]`);\n    const s = S.schedules.find(x => x.calendarid === scheduleId);\n    if (!row || !s) return;\n    row.innerHTML = `\n      <input class=\"sr-name-edit\" value=\"${esc(s.name || '')}\" />\n      <span class=\"sr-actions\">\n        <button class=\"sec sr-save\">Save name</button>\n        <button class=\"sec sr-cancel\">Cancel</button>\n      </span>\n    `;\n    const inp = row.querySelector('.sr-name-edit');\n    inp.focus();\n    inp.select();\n  };\n\n  const switchTab = (tab) => {\n    el('tabBtnHolidays').classList.toggle('active', tab === 'holidays');\n    el('tabBtnSchedules').classList.toggle('active', tab === 'schedules');\n    el('tabPanelHolidays').classList.toggle('active', tab === 'holidays');\n    el('tabPanelSchedules').classList.toggle('active', tab === 'schedules');\n    if (tab === 'schedules') {\n      scheduleDeleteArmed = null;\n      el('newScheduleRowName').value = '';\n      renderSchedulesList();\n    }\n  };\n  const createEmptySchedule = async (name) => {\n    const buId = await getBusinessUnitId();\n    const created = await fetch(baseUrl() + '/api/data/v9.2/calendars', {\n      method: 'POST',\n      headers: { 'Content-Type': 'application/json', 'Prefer': 'return=representation' },\n      body: JSON.stringify({ name, type: 2, 'businessunitid@odata.bind': `/businessunits(${buId})` })\n    });\n    if (!created.ok) throw new Error(await created.text());\n  };\n\n  const renameSchedule = async (scheduleId, name) => {\n    const r = await fetch(baseUrl() + `/api/data/v9.2/calendars(${scheduleId})`, {\n      method: 'PATCH',\n      headers: { 'Content-Type': 'application/json', 'If-Match': '*' },\n      body: JSON.stringify({ name })\n    });\n    if (!r.ok) throw new Error(await r.text());\n  };\n\n  const deleteScheduleEntirely = async (scheduleId) => {\n    const linkedQueues = S.reverseMap[scheduleId] || [];\n    for (const q of linkedQueues) {\n      const info = S.queueMap[q.queueId];\n      if (info && info.businessCalId) await clearScheduleFromQueue(info.businessCalId);\n    }\n    await api(`calendars(${scheduleId})`, { method: 'DELETE' });\n  };\n\n  const openConfirmDelete = (ids) => {\n    const items = S.rows.filter(r => ids.includes(r.id));\n    if (!items.length) return;\n    S.pendingDelete = ids;\n    el('confirmTitle').innerHTML = `<span class=\"icon\"><svg viewBox=\"0 0 20 20\" fill=\"none\"><path d=\"M4 6h12M8 6V4.5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1V6M5.5 6l.6 9.4a1 1 0 0 0 1 .9h5.8a1 1 0 0 0 1-.9L14.5 6\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M8.3 9v4.2M11.7 9v4.2\" stroke=\"currentColor\" stroke-width=\"1.3\" stroke-linecap=\"round\"/></svg></span>Delete ${items.length === 1 ? 'holiday' : items.length + ' holidays'}`;\n    el('confirmList').innerHTML = items.map(it => `\n      <div class=\"confirm-item\">\n        <b>${esc(it.title)}</b>\n        <span>${fmtDate(it.date)} · ${esc(it.scheduleName)}</span>\n      </div>`).join('');\n    el('confirmBackdrop').classList.add('show');\n    document.body.classList.add('modal-open');\n  };\n\n  const closeConfirmModal = () => {\n    el('confirmBackdrop').classList.remove('show');\n    if (!document.getElementById('modalBackdrop').classList.contains('show')) document.body.classList.remove('modal-open');\n    S.pendingDelete = [];\n  };\n\n  const confirmDeleteExecute = async () => {\n    const ids = S.pendingDelete.slice();\n    if (!ids.length) return;\n    el('confirmDeleteBtn').textContent = 'Deleting...';\n    el('confirmDeleteBtn').disabled = true;\n\n    const bySchedule = {};\n    ids.forEach(rid => {\n      const row = S.rows.find(r => r.id === rid);\n      if (!row) return;\n      (bySchedule[row.scheduleId] = bySchedule[row.scheduleId] || []).push(rid);\n    });\n\n    let failed = 0;\n    for (const [scheduleId, removeIds] of Object.entries(bySchedule)) {\n      try {\n        const sched = S.schedules.find(s => s.calendarid === scheduleId);\n        await commitSchedule({\n          scheduleId,\n          scheduleName: (sched && sched.name) || 'Holiday Schedule',\n          rules: existingRulesFor(scheduleId, { excludeIds: removeIds }),\n          linkedQueueIds: (S.reverseMap[scheduleId] || []).map(q => q.queueId)\n        });\n      } catch (e) { failed += removeIds.length; }\n    }\n\n    ids.forEach(i => S.selected.delete(i));\n    el('confirmDeleteBtn').textContent = 'Delete';\n    el('confirmDeleteBtn').disabled = false;\n    closeConfirmModal();\n    if (failed) setStatus(failed + ' holiday(s) failed to delete.', 'err');\n    await load();\n  };\n\n  // ---------- wire up ----------\n\n  el('year').addEventListener('change', apply);\n  el('month').addEventListener('change', apply);\n  el('q').addEventListener('input', apply);\n  el('reset').addEventListener('click', () => { el('year').value='all'; el('month').value='all'; el('q').value=''; apply(); });\n  el('refresh').addEventListener('click', () => load().catch(e => setStatus(String(e.message||e), 'err')));\n\n  el('openNew').addEventListener('click', () => openModal(null));\n  el('tabBtnHolidays').addEventListener('click', () => switchTab('holidays'));\n  el('tabBtnSchedules').addEventListener('click', () => switchTab('schedules'));\n\n  el('newScheduleRowAdd').addEventListener('click', async () => {\n    const name = el('newScheduleRowName').value.trim();\n    if (!name) return;\n    el('newScheduleRowAdd').disabled = true;\n    try {\n      await createEmptySchedule(name);\n      el('newScheduleRowName').value = '';\n      await load();\n      renderSchedulesList();\n    } catch (e) {\n      setStatus(String(e.message || e), 'err');\n    } finally {\n      el('newScheduleRowAdd').disabled = false;\n    }\n  });\n\n  el('schedulesList').addEventListener('click', async (e) => {\n    const wrap = e.target.closest('.schedule-row-wrap');\n    if (!wrap) return;\n    const scheduleId = wrap.getAttribute('data-schedule-wrap');\n    const row = wrap.querySelector('.schedule-row');\n\n    const addSchedId = e.target.getAttribute('data-schedule-add');\n    if (addSchedId) { openModal(addSchedId); return; }\n    const editHolId = e.target.getAttribute('data-schedule-edit');\n    if (editHolId) { openEditModal(editHolId); return; }\n    const delHolId = e.target.getAttribute('data-schedule-delete');\n    if (delHolId) { openConfirmDelete([delHolId]); return; }\n\n    if (e.target.classList.contains('sr-name-link')) {\n      expandedScheduleId = expandedScheduleId === scheduleId ? null : scheduleId;\n      renderSchedulesList();\n      return;\n    }\n\n    if (e.target.classList.contains('sr-rename')) {\n      enterRenameMode(scheduleId);\n      return;\n    }\n\n    if (e.target.classList.contains('sr-cancel')) {\n      renderSchedulesList();\n      return;\n    }\n\n    if (e.target.classList.contains('sr-save')) {\n      const newName = row.querySelector('.sr-name-edit').value.trim();\n      if (!newName) return;\n      e.target.disabled = true;\n      try { await renameSchedule(scheduleId, newName); await load(); renderSchedulesList(); }\n      catch (err) { setStatus(String(err.message || err), 'err'); }\n      finally { e.target.disabled = false; }\n      return;\n    }\n\n    if (e.target.classList.contains('sr-delete')) {\n      if (scheduleDeleteArmed !== scheduleId) {\n        scheduleDeleteArmed = scheduleId;\n        renderSchedulesList();\n        setTimeout(() => { if (scheduleDeleteArmed === scheduleId) { scheduleDeleteArmed = null; renderSchedulesList(); } }, 4000);\n        return;\n      }\n      scheduleDeleteArmed = null;\n      e.target.disabled = true;\n      try { await deleteScheduleEntirely(scheduleId); await load(); renderSchedulesList(); }\n      catch (err) { setStatus(String(err.message || err), 'err'); }\n      return;\n    }\n  });\n  el('modalClose').addEventListener('click', closeModal);\n  el('modalCancel').addEventListener('click', closeModal);\n  el('scheduleSelect').addEventListener('change', () => {\n    toggleNewScheduleField();\n    S.modalScheduleId = el('scheduleSelect').value === '__new__' ? null : el('scheduleSelect').value;\n    renderQueueList();\n  });\n  el('queueFilter').addEventListener('input', renderQueueList);\n  el('usFilter').addEventListener('input', renderUsList);\n  el('modalSave').addEventListener('click', onSave);\n\n  document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => setActiveTab(t.dataset.tab)));\n\n  el('usFetch').addEventListener('click', async () => {\n    const year = Number(el('usYear').value) || new Date().getFullYear();\n    const countryCode = el('countrySelect').value || 'US';\n    const countryName = el('countrySelect').selectedOptions[0]?.textContent || countryCode;\n    el('usHint').textContent = 'Loading ' + countryName + ' holidays for ' + year + '...';\n    S.usHolidays = await fetchHolidaysForCountry(year, countryCode);\n    el('usHint').textContent = 'Loaded ' + S.usHolidays.length + ' holidays for ' + countryName + ' (' + year + ').';\n    renderUsList();\n  });\n\n  el('rows').addEventListener('click', e => {\n    const deleteId = e.target.getAttribute('data-delete');\n    const editId = e.target.getAttribute('data-edit');\n    if (deleteId) openConfirmDelete([deleteId]);\n    if (editId) openEditModal(editId);\n  });\n\n  el('rows').addEventListener('change', e => {\n    if (!e.target.classList.contains('rowcheck')) return;\n    const rid = e.target.getAttribute('data-id');\n    if (e.target.checked) S.selected.add(rid); else S.selected.delete(rid);\n    updateBulkBar();\n    const allChecked = S.filtered.length > 0 && S.filtered.every(it => S.selected.has(it.id));\n    el('selectAll').checked = allChecked;\n  });\n\n  el('selectAll').addEventListener('change', e => {\n    if (e.target.checked) S.filtered.forEach(it => S.selected.add(it.id));\n    else S.filtered.forEach(it => S.selected.delete(it.id));\n    render();\n  });\n\n  el('bulkClear').addEventListener('click', () => { S.selected.clear(); render(); });\n  el('bulkDelete').addEventListener('click', () => openConfirmDelete([...S.selected]));\n  el('confirmClose').addEventListener('click', closeConfirmModal);\n  el('confirmCancel').addEventListener('click', closeConfirmModal);\n  el('confirmDeleteBtn').addEventListener('click', confirmDeleteExecute);\n\n  load().catch(e => setStatus(String(e.message||e), 'err'));\n})();\n</script>\n</body>\n</html>\n"
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Queue Holidays</title>
+<style>
+:root{--bg:#f5f7fb;--panel:#fff;--line:#dfe5f2;--brand:#0f6cbd;--brand2:#25a7b8;--txt:#1d2433;--muted:#5f6c86;--ok:#1f9d55;--warn:#b26a00;--danger:#b42318}
+*{box-sizing:border-box}
+body{margin:0;font-family:Segoe UI,system-ui,sans-serif;background:var(--bg);color:var(--txt);padding:16px}
+.card{max-width:1220px;margin:0 auto;background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.head{background:linear-gradient(120deg,#0f6cbd,#25a7b8);color:#fff;padding:16px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.head h1{margin:0;font-size:22px}
+.stats{display:flex;gap:8px}
+.s{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.35);border-radius:10px;padding:7px 10px;min-width:110px}
+.s b{display:block;font-size:18px}
+.tools{display:grid;grid-template-columns:.8fr .8fr 1.4fr auto;gap:10px;padding:12px;border-bottom:1px solid var(--line);background:#f8fbff;align-items:end}
+@media(max-width:980px){.tools{grid-template-columns:1fr 1fr}.tools .btns{grid-column:1/-1}}
+.tools label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
+.tools input,.tools select{width:100%;border:1px solid var(--line);border-radius:8px;padding:8px}
+.btns{display:flex;gap:8px;align-items:end}
+button{border:0;border-radius:8px;padding:8px 12px;font-weight:600;cursor:pointer;font-size:13px}
+.pri{background:var(--brand);color:#fff}
+.sec{background:#fff;border:1px solid var(--line)}
+.danger-btn{background:#fff2f1;color:var(--danger);border:1px solid #ffd4cf}
+.body{padding:12px}
+.status{margin-bottom:10px;padding:8px 10px;border:1px solid #c6e3ff;background:#ebf5ff;color:#13446f;border-radius:8px;font-size:13px}
+.status.err{border-color:#ffd4cf;background:#fff2f1;color:var(--danger)}
+.status.ok{border-color:#d3edd9;background:#edf7ef;color:var(--ok)}
+table{width:100%;border-collapse:collapse}
+th,td{border-bottom:1px solid #edf2fa;padding:9px;text-align:left;font-size:13px;vertical-align:top}
+th{font-size:11px;color:var(--muted);text-transform:uppercase;background:#f9fbff}
+.empty{padding:16px;text-align:center;color:var(--muted);display:none}
+.chip{display:inline-block;background:#edf7ef;border:1px solid #d3edd9;color:var(--ok);border-radius:999px;padding:2px 8px;font-size:11px;margin:2px 4px 2px 0}
+.chip.warn{background:#fff6e8;border-color:#ffe3ad;color:var(--warn)}
+.rowactions{display:flex;gap:6px;flex-wrap:wrap}
+.rowactions button{padding:5px 8px;font-size:12px}
+
+.modal-backdrop{position:fixed;inset:0;background:rgba(15,20,35,.45);display:none;align-items:center;justify-content:center;z-index:100;padding:16px}
+.modal-backdrop.show{display:flex}
+.modal{background:#fff;border-radius:14px;max-width:680px;width:100%;max-height:88vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.modal-head{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.modal-head h2{margin:0;font-size:18px}
+.modal-body{padding:16px 18px 24px;display:flex;flex-direction:column;gap:14px}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:4px}
+.field input,.field select{width:100%;border:1px solid var(--line);border-radius:8px;padding:8px}
+.tabs{display:flex;gap:6px;border-bottom:1px solid var(--line);margin-bottom:10px}
+.tab{padding:8px 12px;border-radius:8px 8px 0 0;cursor:pointer;font-size:13px;font-weight:600;color:var(--muted)}
+.tab.active{color:var(--brand);border:1px solid var(--line);border-bottom:2px solid #fff;background:#f8fbff}
+.tabpane{display:none}
+.tabpane.active{display:block}
+.us-toolbar{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;align-items:end}
+.us-toolbar .field{flex:1;min-width:120px}
+.us-list{max-height:220px;overflow:auto;border:1px solid var(--line);border-radius:8px}
+.us-item{display:flex;gap:8px;align-items:center;padding:7px 10px;border-bottom:1px solid #f0f3f9;font-size:13px}
+.us-item:last-child{border-bottom:0}
+.us-item .d{color:var(--muted);width:110px;flex:none}
+.queue-toolbar{display:flex;gap:8px;margin-bottom:8px}
+.queue-toolbar input{flex:1}
+.queue-list{max-height:220px;overflow:auto;border:1px solid var(--line);border-radius:8px}
+.queue-item{display:flex;gap:8px;align-items:center;padding:7px 10px;border-bottom:1px solid #f0f3f9;font-size:13px}
+.queue-item:last-child{border-bottom:0}
+.queue-item small{color:var(--muted)}
+.queue-item.disabled{opacity:.55}
+.modal-actions{display:flex;justify-content:flex-end;gap:8px;padding:14px 18px;border-top:1px solid var(--line)}
+.hint{font-size:12px;color:var(--muted)}
+
+.modal-backdrop{backdrop-filter:blur(3px)}
+.modal{animation:modalIn .18s ease-out;box-shadow:0 24px 70px rgba(15,23,42,.28);border:1px solid #e7ebf3}
+@keyframes modalIn{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+.modal-head{background:linear-gradient(120deg,#0f6cbd,#25a7b8);border-bottom:0;border-radius:14px 14px 0 0}
+.modal-head h2{color:#fff;font-size:19px}
+.modal-head .sec{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.35);color:#fff}
+.modal-head .sec:hover{background:rgba(255,255,255,.3)}
+.modal-subtitle{padding:10px 18px 0;font-size:12.5px;color:var(--muted)}
+.section-label{font-size:12px;font-weight:700;color:var(--txt);text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.section-card{border:1px solid var(--line);border-radius:12px;padding:14px;background:#fbfcff}
+.segmented{display:inline-flex;background:#eef2fb;border-radius:10px;padding:4px;gap:4px}
+.segmented .tab{border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;border:0;background:transparent}
+.segmented .tab.active{background:#fff;color:var(--brand);box-shadow:0 1px 4px rgba(15,23,42,.14)}
+.import-grid{display:grid;grid-template-columns:1.3fr .8fr 1.3fr auto;gap:10px;align-items:end}
+.import-grid .field{margin:0}
+.us-item{transition:background .12s;border-radius:6px}
+.us-item:hover{background:#f5f9ff}
+.us-item input[type=checkbox]{width:16px;height:16px;accent-color:var(--brand)}
+.queue-item{transition:background .12s;border-radius:6px}
+.queue-item:hover:not(.disabled){background:#f5f9ff}
+.queue-item input[type=checkbox]{width:16px;height:16px;accent-color:var(--brand)}
+button.pri{box-shadow:0 2px 8px rgba(15,108,189,.3)}
+button.pri:hover{filter:brightness(1.06)}
+button.sec:hover{background:#f2f6ff}
+@media(max-width:620px){.import-grid{grid-template-columns:1fr 1fr}.import-grid button{grid-column:1/-1}}
+
+.icon{width:16px;height:16px;display:inline-block;vertical-align:-3px;margin-right:6px;flex:none}
+.icon svg{width:100%;height:100%;display:block}
+.modal-head h2 .icon{width:19px;height:19px;vertical-align:-4px;margin-right:8px}
+#modalClose .icon{margin-right:0;width:14px;height:14px;vertical-align:-2px}
+
+body.modal-open{overflow:hidden}
+.modal{scrollbar-width:thin;scrollbar-color:#c7d3e6 transparent}
+.modal::-webkit-scrollbar{width:9px}
+.modal::-webkit-scrollbar-track{background:transparent}
+.modal::-webkit-scrollbar-thumb{background:#c7d3e6;border-radius:99px;border:2px solid #fff}
+.modal::-webkit-scrollbar-thumb:hover{background:#a9bad6}
+.us-list,.queue-list{scrollbar-width:thin;scrollbar-color:#d7dfee transparent}
+.us-list::-webkit-scrollbar,.queue-list::-webkit-scrollbar{width:7px}
+.us-list::-webkit-scrollbar-track,.queue-list::-webkit-scrollbar-track{background:transparent;margin:4px 0}
+.us-list::-webkit-scrollbar-thumb,.queue-list::-webkit-scrollbar-thumb{background:#d7dfee;border-radius:99px}
+.us-list::-webkit-scrollbar-thumb:hover,.queue-list::-webkit-scrollbar-thumb:hover{background:#b9c8e2}
+
+.bulk-bar{display:none;align-items:center;gap:10px;padding:10px 12px;margin:0 12px 10px;background:#eef4ff;border:1px solid #cfe0ff;border-radius:10px;font-size:13px;color:#123c73}
+.bulk-bar.show{display:flex}
+.bulk-bar .spacer{flex:1}
+th.chk-col,td.chk-col{width:34px;text-align:center}
+input[type=checkbox]{width:15px;height:15px;accent-color:var(--brand);cursor:pointer}
+.confirm-list{max-height:200px;overflow:auto;border:1px solid var(--line);border-radius:10px;margin-top:4px}
+.confirm-item{padding:8px 12px;border-bottom:1px solid #f0f3f9;font-size:13px}
+.confirm-item:last-child{border-bottom:0}
+.confirm-item b{display:block}
+.confirm-item span{color:var(--muted);font-size:12px}
+.modal.confirm{max-width:460px}
+.modal-head.danger{background:linear-gradient(120deg,#c4342a,#e2685f)}
+
+.how-it-works{display:flex;gap:8px;padding:10px 18px 0;flex-wrap:wrap}
+.step-chip{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted);background:#f2f6ff;border:1px solid #dfe8fb;border-radius:999px;padding:5px 11px 5px 6px}
+.step-chip b{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:var(--brand);color:#fff;font-size:10.5px}
+.step-arrow{color:#b7c3dc;font-size:13px;align-self:center}
+.section-hint{font-size:12px;color:var(--muted);margin:-4px 0 10px}
+
+.schedule-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;background:#fff}
+.schedule-row input.sr-name{flex:1;border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-size:13px}
+.schedule-row .sr-name-link{flex:1;text-align:left;background:transparent;border:0;padding:7px 9px;font-size:13px;font-weight:600;color:var(--brand);cursor:pointer;border-radius:8px}
+.schedule-row .sr-name-link:hover{background:#eef4fb;text-decoration:underline}
+.schedule-row .sr-name-edit{flex:1;border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-size:13px}
+.schedule-row .sr-meta{font-size:12px;color:var(--muted);white-space:nowrap}
+.schedule-row .sr-actions{display:flex;gap:6px}
+.schedule-row .sr-actions button{padding:6px 10px;font-size:12px}
+.schedule-row-wrap{margin-bottom:8px}
+.schedule-row-wrap .schedule-row{margin-bottom:0;border-radius:10px 10px 0 0}
+.schedule-row-wrap .schedule-row.expanded{border-color:var(--brand);border-bottom:0}
+.sr-caret{width:14px;color:var(--muted);font-size:11px}
+.schedule-holidays-panel{border:1px solid var(--brand);border-top:0;border-radius:0 0 10px 10px;background:#f8fbff;padding:10px 12px}
+.schedule-holidays-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:12px;color:var(--muted);font-weight:600}
+.mini-table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.mini-table th,.mini-table td{border-bottom:1px solid #edf2fa;padding:8px 9px;text-align:left;font-size:12.5px}
+.mini-table th{font-size:10.5px;color:var(--muted);text-transform:uppercase;background:#f9fbff}
+.mini-table tr:last-child td{border-bottom:0}
+.new-schedule-row{display:flex;gap:8px;margin-bottom:14px}
+.new-schedule-row input{flex:1;border:1px solid var(--line);border-radius:8px;padding:8px}
+.tabbar{display:flex;gap:4px;padding:10px 12px 0;background:#f8fbff}
+.tabbtn{display:inline-flex;align-items:center;gap:7px;background:transparent;border:0;border-bottom:2px solid transparent;border-radius:8px 8px 0 0;padding:9px 16px;font-weight:600;font-size:13px;color:var(--muted);cursor:pointer}
+.tabbtn .icon{display:inline-flex}
+.tabbtn .icon svg{width:16px;height:16px}
+.tabbtn:hover{background:#eef4fb;color:var(--txt)}
+.tabbtn.active{color:var(--brand);border-bottom-color:var(--brand);background:#fff}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+.schedules-panel{padding:12px}
+.schedules-panel .modal-subtitle{font-size:12px;color:var(--muted);margin:-4px 0 10px}
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="head">
+      <div><h1>Calendar Holidays</h1><div>Create, import, and assign holiday schedules to queues.</div></div>
+      <div class="stats">
+        <div class="s">Total<b id="total">0</b></div>
+        <div class="s">Visible<b id="visible">0</b></div>
+        <div class="s">Schedules<b id="cals">0</b></div>
+      </div>
+    </div>
+
+    <div class="tabbar">
+      <button class="tabbtn active" id="tabBtnSchedules" data-tab="schedules"><span class="icon"><svg viewBox="0 0 20 20" fill="none"><path d="M6.5 5.5h9M6.5 10h9M6.5 14.5h9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="3.4" cy="5.5" r="1" fill="currentColor"/><circle cx="3.4" cy="10" r="1" fill="currentColor"/><circle cx="3.4" cy="14.5" r="1" fill="currentColor"/></svg></span>Schedules</button>
+      <button class="tabbtn" id="tabBtnHolidays" data-tab="holidays"><span class="icon"><svg viewBox="0 0 20 20" fill="none"><path d="M6 2.25v2M14 2.25v2M3.25 7.25h13.5M4.25 4.25h11.5a1 1 0 0 1 1 1v10.5a1 1 0 0 1-1 1H4.25a1 1 0 0 1-1-1V5.25a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Holidays</button>
+    </div>
+
+    <div id="tabPanelHolidays" class="tab-panel">
+    <div class="tools">
+      <div><label>Year</label><select id="year"></select></div>
+      <div><label>Month</label><select id="month"></select></div>
+      <div><label>Search</label><input id="q" placeholder="Holiday, schedule, or queue" /></div>
+      <div class="btns">
+        <button class="sec" id="reset">Reset</button>
+        <button class="sec" id="refresh">Refresh</button>
+        <button class="pri" id="openNew">+ New Holiday</button>
+      </div>
+    </div>
+
+    <div class="body">
+      <div class="status" id="status">Loading...</div>
+      <div class="bulk-bar" id="bulkBar"><span id="bulkCount">0 selected</span><span class="spacer"></span><button class="sec" id="bulkClear">Clear selection</button><button class="danger-btn" id="bulkDelete">Delete selected</button></div>
+      <table>
+        <thead><tr><th class="chk-col"><input type="checkbox" id="selectAll" /></th><th>Holiday</th><th>Date</th><th>Schedule</th><th>Applied Queues</th><th>Duration</th><th>Actions</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+      <div class="empty" id="empty">No holidays for current filters.</div>
+    </div>
+    </div>
+
+    <div id="tabPanelSchedules" class="tab-panel active">
+      <div class="schedules-panel">
+        <div class="modal-subtitle">Click a schedule's name to view and manage its holidays. You can also rename or remove a schedule here.</div>
+        <div class="new-schedule-row">
+          <input id="newScheduleRowName" placeholder="New schedule name" />
+          <button class="pri" id="newScheduleRowAdd">+ Create</button>
+        </div>
+        <div id="schedulesList"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal">
+      <div class="modal-head">
+        <h2 id="modalTitle"><span class="icon"><svg viewBox="0 0 20 20" fill="none"><path d="M6 2.25v2M14 2.25v2M3.25 7.25h13.5M4.25 4.25h11.5a1 1 0 0 1 1 1v10.5a1 1 0 0 1-1 1H4.25a1 1 0 0 1-1-1V5.25a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>New Holiday</h2>
+        <button class="sec" id="modalClose"><span class="icon"><svg viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5 5 15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span></button>
+      </div>
+      <div class="modal-subtitle">Create a holiday, import from a country's public holiday calendar, and assign it to queues.</div>
+      <div class="how-it-works">
+        <span class="step-chip"><b>1</b>Choose or create a schedule</span>
+        <span class="step-arrow">&#8594;</span>
+        <span class="step-chip"><b>2</b>Add holidays to it</span>
+        <span class="step-arrow">&#8594;</span>
+        <span class="step-chip"><b>3</b>Apply the schedule to queues</span>
+      </div>
+      <div class="modal-body">
+        <div class="section-card">
+          <div class="section-label"><span class="icon"><svg viewBox="0 0 20 20" fill="none"><path d="M3 6.25a1 1 0 0 1 1-1h3.6l1.3 1.75H16a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></span>Holiday Schedule</div>
+          <div class="section-hint">A schedule is a reusable holiday calendar — create one, fill it with holidays, then apply it to any number of queues.</div>
+          <div class="field">
+            <select id="scheduleSelect"></select>
+          </div>
+          <div class="field" id="newScheduleNameWrap" style="display:none;margin-top:10px">
+            <label>New schedule name</label>
+            <input id="newScheduleName" placeholder="e.g. US Public Holidays 2026" />
+          </div>
+        </div>
+
+        <div class="section-card">
+          <div class="section-label"><span class="icon"><svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7.25" stroke="currentColor" stroke-width="1.4"/><path d="M10 6.75v6.5M6.75 10h6.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></span>Add Holidays</div>
+          <div class="section-hint">Holidays added here go into the schedule selected above.</div>
+          <div class="segmented" role="tablist">
+            <div class="tab active" data-tab="custom"><span class="icon"><svg viewBox="0 0 20 20" fill="none"><path d="M13.4 3.4a1.4 1.4 0 0 1 2 0l1.2 1.2a1.4 1.4 0 0 1 0 2L7.4 15.8l-3.4.8.8-3.4Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></span>Custom</div>
+            <div class="tab" data-tab="import"><span class="icon"><svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7.25" stroke="currentColor" stroke-width="1.4"/><path d="M2.9 10h14.2M10 2.9c2.1 2 2.1 12.2 0 14.2M10 2.9c-2.1 2-2.1 12.2 0 14.2" stroke="currentColor" stroke-width="1.2"/></svg></span>Import from Country</div>
+          </div>
+
+          <div class="tabpane active" id="tab-custom" style="margin-top:12px">
+            <div class="field"><label>Holiday name</label><input id="customName" placeholder="e.g. Company Founding Day" /></div>
+            <div class="field"><label>Date</label><input id="customDate" type="date" /></div>
+            <div class="hint">Leave blank if you only want to change queue assignment for the selected schedule.</div>
+          </div>
+
+          <div class="tabpane" id="tab-import" style="margin-top:12px">
+            <div class="import-grid">
+              <div class="field"><label>Country</label><select id="countrySelect"></select></div>
+              <div class="field"><label>Year</label><input id="usYear" type="number" /></div>
+              <div class="field"><label>Filter</label><input id="usFilter" placeholder="Filter holiday name" /></div>
+              <button class="sec" id="usFetch">Fetch</button>
+            </div>
+            <div class="hint" id="usHint">Source: date.nager.at public holiday API — global coverage, 100+ countries.</div>
+            <div class="us-list" id="usList"></div>
+          </div>
+        </div>
+
+        <div class="section-card" id="queuesSection">
+          <div class="section-label"><span class="icon"><svg viewBox="0 0 20 20" fill="none"><path d="M10.7 3.25H5.25a1 1 0 0 0-1 1v5.45a1 1 0 0 0 .3.7l6.9 6.9a1 1 0 0 0 1.4 0l4.25-4.25a1 1 0 0 0 0-1.4l-6.9-6.9a1 1 0 0 0-.45-.5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><circle cx="7.3" cy="6.8" r="0.9" fill="currentColor"/></svg></span>Apply to Queues</div>
+          <div class="queue-toolbar"><input id="queueFilter" placeholder="Search queues" /></div>
+          <div class="queue-list" id="queueList"></div>
+          <div class="section-hint" style="margin-top:14px">Selected queues will use every holiday in this schedule as non-working days.</div>
+          <div class="hint">Queues without configured Operating Hours cannot be linked here; set up Operating Hours for that queue in Dynamics 365 first.</div>
+        </div>
+
+        <div class="status" id="modalStatus" style="display:none"></div>
+      </div>
+      <div class="modal-actions">
+        <button class="sec" id="modalCancel">Cancel</button>
+        <button class="pri" id="modalSave">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="confirmBackdrop">
+    <div class="modal confirm">
+      <div class="modal-head danger">
+        <h2 id="confirmTitle"><span class="icon"><svg viewBox="0 0 20 20" fill="none"><path d="M4 6h12M8 6V4.5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1V6M5.5 6l.6 9.4a1 1 0 0 0 1 .9h5.8a1 1 0 0 0 1-.9L14.5 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M8.3 9v4.2M11.7 9v4.2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>Delete holiday</h2>
+        <button class="sec" id="confirmClose"><span class="icon"><svg viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5 5 15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span></button>
+      </div>
+      <div class="modal-body">
+        <div>This will permanently remove the following from Dynamics 365:</div>
+        <div class="confirm-list" id="confirmList"></div>
+      </div>
+      <div class="modal-actions">
+        <button class="sec" id="confirmCancel">Cancel</button>
+        <button class="danger-btn" id="confirmDeleteBtn">Delete</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+(() => {
+  const S = { schedules: [], rows: [], filtered: [], queues: [], queueMap: {}, reverseMap: {}, usHolidays: [], selected: new Set(), pendingDelete: [], editingId: null, modalScheduleId: null };
+  const months = ['All months','January','February','March','April','May','June','July','August','September','October','November','December'];
+
+  const el = id => document.getElementById(id);
+  const baseUrl = () => {
+    try {
+      const x = window.parent && window.parent.Xrm;
+      if (x && x.Utility && x.Utility.getGlobalContext) return x.Utility.getGlobalContext().getClientUrl();
+    } catch (_) {}
+    return window.location.origin;
+  };
+
+  const setStatus = (msg, mode) => {
+    const s = el('status');
+    s.textContent = msg;
+    s.className = 'status' + (mode ? ' ' + mode : '');
+  };
+  const setModalStatus = (msg, mode) => {
+    const s = el('modalStatus');
+    if (!msg) { s.style.display = 'none'; s.textContent=''; return; }
+    s.style.display = 'block';
+    s.textContent = msg;
+    s.className = 'status' + (mode ? ' ' + mode : '');
+  };
+
+  const api = async (path, opts) => {
+    const r = await fetch(baseUrl() + '/api/data/v9.2/' + path, Object.assign({
+      headers: Object.assign({ Accept: 'application/json', 'OData-MaxVersion':'4.0', 'OData-Version':'4.0' }, (opts && opts.headers) || {})
+    }, opts || {}));
+    if (!r.ok) throw new Error((opts && opts.method || 'GET') + ' ' + path + ' -> ' + r.status + ': ' + await r.text());
+    if (r.status === 204) return null;
+    return r.json();
+  };
+
+  const esc = v => String(v||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
+  const fmtDate = d => d ? new Intl.DateTimeFormat(undefined,{year:'numeric',month:'short',day:'2-digit',timeZone:'UTC'}).format(d) : 'No date';
+  const fmtDur = m => m==null ? '-' : (m===1439||m===1440 ? 'Full day' : (Math.floor(m/60)+'h '+(m%60)+'m'));
+  const isoDay = (y,m,d) => new Date(Date.UTC(y,m-1,d,0,0,0)).toISOString();
+
+  let whoAmIBusinessUnitId = null;
+  const getBusinessUnitId = async () => {
+    if (whoAmIBusinessUnitId) return whoAmIBusinessUnitId;
+    const who = await api('WhoAmI');
+    whoAmIBusinessUnitId = who.BusinessUnitId;
+    return whoAmIBusinessUnitId;
+  };
+
+  // ---------- data loading ----------
+
+  const loadQueues = async () => {
+    const j = await api("queues?$select=queueid,name,_msdyn_operatinghourid_value&$filter=statecode eq 0&$top=1000");
+    return (j.value || []).filter(q => q.name && !/^</.test(q.name));
+  };
+
+  const loadOperatingHourCalendarMap = async (ohIds) => {
+    const map = {};
+    const unique = [...new Set(ohIds.filter(Boolean))];
+    const batch = 12;
+    for (let i=0;i<unique.length;i+=batch) {
+      const part = unique.slice(i,i+batch);
+      const res = await Promise.all(part.map(async id => {
+        try { const r = await api(`msdyn_operatinghours(${id})?$select=msdyn_operatinghourid,msdyn_calendarid`); return {id, calId:r.msdyn_calendarid}; }
+        catch(_) { return {id, calId:null}; }
+      }));
+      res.forEach(r => map[r.id] = r.calId);
+    }
+    return map;
+  };
+
+  const loadBusinessCalendarHolidayMap = async (calIds) => {
+    const map = {};
+    const unique = [...new Set(calIds.filter(Boolean))];
+    const batch = 12;
+    for (let i=0;i<unique.length;i+=batch) {
+      const part = unique.slice(i,i+batch);
+      const res = await Promise.all(part.map(async id => {
+        try { const r = await api(`calendars(${id})?$select=calendarid,_holidayschedulecalendarid_value`); return {id, scheduleId:r._holidayschedulecalendarid_value}; }
+        catch(_) { return {id, scheduleId:null}; }
+      }));
+      res.forEach(r => map[r.id] = r.scheduleId);
+    }
+    return map;
+  };
+
+  const buildQueueRelationships = async () => {
+    setStatus('Resolving queue operating hours...');
+    const queues = await loadQueues();
+    const ohMap = await loadOperatingHourCalendarMap(queues.map(q => q._msdyn_operatinghourid_value));
+    const businessCalIds = Object.values(ohMap);
+    const scheduleMap = await loadBusinessCalendarHolidayMap(businessCalIds);
+
+    const reverseMap = {};
+    const queueInfo = {};
+    queues.forEach(q => {
+      const ohId = q._msdyn_operatinghourid_value;
+      const businessCalId = ohId ? ohMap[ohId] : null;
+      const scheduleId = businessCalId ? scheduleMap[businessCalId] : null;
+      queueInfo[q.queueid] = { name: q.name, businessCalId, scheduleId };
+      if (scheduleId) {
+        (reverseMap[scheduleId] = reverseMap[scheduleId] || []).push({ queueId: q.queueid, queueName: q.name });
+      }
+    });
+
+    S.queues = queues.map(q => ({ id: q.queueid, name: q.name, businessCalId: queueInfo[q.queueid].businessCalId }));
+    S.queueMap = queueInfo;
+    S.reverseMap = reverseMap;
+  };
+
+  const loadSchedules = async () => {
+    const j = await api("calendars?$select=calendarid,name,type&$filter=type eq 2&$top=250");
+    const cals = j.value || [];
+    const withRules = await Promise.all(cals.map(async cal => {
+      try {
+        const rr = await api(`calendars(${cal.calendarid})/calendar_calendar_rules?$select=calendarruleid,name,description,timecode,starttime,effectiveintervalstart,duration`);
+        return Object.assign({}, cal, { calendar_calendar_rules: rr.value || [] });
+      } catch (_) {
+        return Object.assign({}, cal, { calendar_calendar_rules: [] });
+      }
+    }));
+    return withRules;
+  };
+
+  const load = async () => {
+    setStatus('Loading holiday schedules and queue assignments...');
+    await buildQueueRelationships();
+    const schedules = await loadSchedules();
+    S.schedules = schedules;
+
+    const rows = [];
+    schedules.forEach(cal => {
+      (cal.calendar_calendar_rules || []).forEach(r => {
+        if (r.timecode !== 2) return;
+        const iso = r.starttime || r.effectiveintervalstart || null;
+        const countryMatch = /\(([A-Z]{2})\)\s*$/.exec(r.description || '');
+        rows.push({
+          id: r.calendarruleid,
+          title: r.name || 'Holiday',
+          date: iso ? new Date(iso) : null,
+          scheduleId: cal.calendarid,
+          scheduleName: cal.name || '(Unnamed schedule)',
+          duration: r.duration ?? null,
+          countryCode: countryMatch ? countryMatch[1] : null
+        });
+      });
+    });
+
+    S.rows = rows.sort((a,b) => (a.date?a.date.getTime():0) - (b.date?b.date.getTime():0));
+    buildFilters();
+    apply();
+    renderSchedulesList();
+    setStatus('Loaded ' + S.rows.length + ' holidays across ' + S.schedules.length + ' holiday schedule(s).', 'ok');
+  };
+
+  // ---------- filters / render ----------
+
+  const buildFilters = () => {
+    const ys = [...new Set(S.rows.map(x => x.date ? x.date.getUTCFullYear() : null).filter(Boolean))].sort((a,b)=>a-b);
+    el('year').innerHTML = '<option value="all">All years</option>' + ys.map(y => `<option value="${y}">${y}</option>`).join('');
+    el('month').innerHTML = months.map((m,i) => `<option value="${i===0?'all':i}">${m}</option>`).join('');
+  };
+
+  const appliedQueueNames = scheduleId => (S.reverseMap[scheduleId] || []).map(x => x.queueName);
+
+  const render = () => {
+    el('total').textContent = String(S.rows.length);
+    el('visible').textContent = String(S.filtered.length);
+    el('cals').textContent = String(S.schedules.length);
+
+    if (!S.filtered.length) { el('rows').innerHTML = ''; el('empty').style.display = 'block'; return; }
+    el('empty').style.display = 'none';
+
+    el('rows').innerHTML = S.filtered.map(it => {
+      const queues = appliedQueueNames(it.scheduleId);
+      const queueHtml = queues.length
+        ? queues.map(n => `<span class="chip">${esc(n)}</span>`).join('')
+        : `<span class="chip warn">Not applied</span>`;
+      return `<tr>
+        <td class="chk-col"><input type="checkbox" class="rowcheck" data-id="${it.id}" ${S.selected.has(it.id) ? 'checked' : ''} /></td>
+        <td><strong>${esc(it.title)}</strong></td>
+        <td>${fmtDate(it.date)}</td>
+        <td>${esc(it.scheduleName)}</td>
+        <td>${queueHtml}</td>
+        <td>${fmtDur(it.duration)}</td>
+        <td class="rowactions">
+          <button class="sec" data-edit="${it.id}" title="Edit this holiday and its queue assignment">Edit</button>
+          <button class="danger-btn" data-delete="${it.id}">Delete</button>
+        </td>
+      </tr>`;
+    }).join('');
+    updateBulkBar();
+    const allChecked = S.filtered.length > 0 && S.filtered.every(it => S.selected.has(it.id));
+    el('selectAll').checked = allChecked;
+  };
+
+  const updateBulkBar = () => {
+    const n = S.selected.size;
+    el('bulkBar').classList.toggle('show', n > 0);
+    el('bulkCount').textContent = n + (n === 1 ? ' holiday selected' : ' holidays selected');
+  };
+
+  const apply = () => {
+    const y = el('year').value, m = el('month').value, q = el('q').value.trim().toLowerCase();
+    S.filtered = S.rows.filter(it => {
+      const yy = it.date ? it.date.getUTCFullYear() : null;
+      const mm = it.date ? (it.date.getUTCMonth()+1) : null;
+      const ymOk = (y === 'all' || yy === Number(y)) && (m === 'all' || mm === Number(m));
+      const hay = (it.title + ' ' + it.scheduleName + ' ' + appliedQueueNames(it.scheduleId).join(' ')).toLowerCase();
+      return ymOk && (!q || hay.includes(q));
+    });
+    render();
+  };
+
+  // ---------- modal ----------
+
+  const MODAL_CALENDAR_ICON = '<span class="icon"><svg viewBox="0 0 20 20" fill="none"><path d="M6 2.25v2M14 2.25v2M3.25 7.25h13.5M4.25 4.25h11.5a1 1 0 0 1 1 1v10.5a1 1 0 0 1-1 1H4.25a1 1 0 0 1-1-1V5.25a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>';
+  const EDIT_ICON_HTML = '<span class="icon"><svg viewBox="0 0 20 20" fill="none"><path d="M13.4 3.4a1.4 1.4 0 0 1 2 0l1.2 1.2a1.4 1.4 0 0 1 0 2L7.4 15.8l-3.4.8.8-3.4Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></span>';
+  const modal = { scheduleId: null };
+
+  const openModal = (presetScheduleId) => {
+    S.editingId = null;
+    el('modalTitle').innerHTML = MODAL_CALENDAR_ICON + 'New Holiday';
+    el('scheduleSelect').disabled = false;
+    document.querySelector('.segmented').style.display = '';
+    el('queuesSection').style.display = '';
+    el('scheduleSelect').innerHTML = '<option value="__new__">+ Create new schedule</option>' +
+      S.schedules.map(s => `<option value="${s.calendarid}">${esc(s.name || '(Unnamed schedule)')}</option>`).join('');
+    if (presetScheduleId) el('scheduleSelect').value = presetScheduleId;
+    S.modalScheduleId = el('scheduleSelect').value === '__new__' ? null : el('scheduleSelect').value;
+    toggleNewScheduleField();
+
+    el('customName').value = '';
+    el('customDate').value = '';
+    el('usFilter').value = '';
+    el('usYear').value = new Date().getFullYear();
+    el('usList').innerHTML = '';
+    S.usHolidays = [];
+    setActiveTab('custom');
+    setModalStatus('');
+    renderQueueList();
+    loadCountries();
+    el('modalBackdrop').classList.add('show');
+    document.body.classList.add('modal-open');
+  };
+
+  const openEditModal = (ruleId) => {
+    const row = S.rows.find(r => r.id === ruleId);
+    if (!row) return;
+    openModal(row.scheduleId);
+    S.editingId = ruleId;
+    el('modalTitle').innerHTML = EDIT_ICON_HTML + 'Edit Holiday';
+    el('scheduleSelect').disabled = true;
+    document.querySelector('.segmented').style.display = 'none';
+    S.modalScheduleId = row.scheduleId;
+    renderQueueList();
+    setActiveTab('custom');
+    el('customName').value = row.title;
+    if (row.date) {
+      const yyyy = row.date.getUTCFullYear(), mm = String(row.date.getUTCMonth()+1).padStart(2,'0'), dd = String(row.date.getUTCDate()).padStart(2,'0');
+      el('customDate').value = `${yyyy}-${mm}-${dd}`;
+    }
+  };
+  const closeModal = () => { el('modalBackdrop').classList.remove('show'); document.body.classList.remove('modal-open'); };
+
+  const toggleNewScheduleField = () => {
+    el('newScheduleNameWrap').style.display = el('scheduleSelect').value === '__new__' ? 'block' : 'none';
+  };
+
+  const setActiveTab = tab => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+    el('tab-custom').classList.toggle('active', tab === 'custom');
+    el('tab-import').classList.toggle('active', tab === 'import');
+  };
+
+  const renderQueueList = () => {
+    const filterText = el('queueFilter').value.trim().toLowerCase();
+    const appliedSet = new Set((S.reverseMap[S.modalScheduleId] || []).map(x => x.queueId));
+    const list = S.queues.filter(q => !filterText || q.name.toLowerCase().includes(filterText)).slice(0, 200);
+    el('queueList').innerHTML = list.map(q => {
+      const disabled = !q.businessCalId;
+      const checked = appliedSet.has(q.id);
+      return `<label class="queue-item ${disabled ? 'disabled' : ''}">
+        <input type="checkbox" data-queue="${q.id}" ${disabled ? 'disabled' : ''} ${checked ? 'checked' : ''} />
+        <span>${esc(q.name)}</span>
+        ${disabled ? '<small>No operating hours configured</small>' : ''}
+      </label>`;
+    }).join('') || '<div class="hint" style="padding:10px">No queues match.</div>';
+  };
+
+  // Fallback holiday data (used only if the live public API call fails).
+  const COUNTRY_FALLBACKS = {
+    US: (year) => ([
+      ["New Year's Day", `${year}-01-01`],
+      ["Martin Luther King, Jr. Day", null],
+      ["Washington's Birthday", null],
+      ["Memorial Day", null],
+      ["Juneteenth National Independence Day", `${year}-06-19`],
+      ["Independence Day", `${year}-07-04`],
+      ["Labor Day", null],
+      ["Columbus Day", null],
+      ["Veterans Day", `${year}-11-11`],
+      ["Thanksgiving Day", null],
+      ["Christmas Day", `${year}-12-25`]
+    ]).filter(x => x[1]).map(([name,date]) => ({ name, date }))
+  };
+
+  const COUNTRY_LIST_FALLBACK = [
+    {countryCode:'US',name:'United States'},{countryCode:'GB',name:'United Kingdom'},{countryCode:'CA',name:'Canada'},
+    {countryCode:'BR',name:'Brazil'},{countryCode:'MX',name:'Mexico'},{countryCode:'DE',name:'Germany'},
+    {countryCode:'FR',name:'France'},{countryCode:'ES',name:'Spain'},{countryCode:'IT',name:'Italy'},
+    {countryCode:'PT',name:'Portugal'},{countryCode:'NL',name:'Netherlands'},{countryCode:'IE',name:'Ireland'},
+    {countryCode:'AU',name:'Australia'},{countryCode:'NZ',name:'New Zealand'},{countryCode:'IN',name:'India'},
+    {countryCode:'JP',name:'Japan'},{countryCode:'CN',name:'China'},{countryCode:'ZA',name:'South Africa'},
+    {countryCode:'AR',name:'Argentina'},{countryCode:'CL',name:'Chile'},{countryCode:'CO',name:'Colombia'},
+    {countryCode:'CH',name:'Switzerland'},{countryCode:'SE',name:'Sweden'},{countryCode:'NO',name:'Norway'},
+    {countryCode:'DK',name:'Denmark'},{countryCode:'FI',name:'Finland'},{countryCode:'PL',name:'Poland'},
+    {countryCode:'AT',name:'Austria'},{countryCode:'BE',name:'Belgium'},{countryCode:'SG',name:'Singapore'}
+  ];
+
+  const COUNTRY_NAME_BY_CODE = Object.fromEntries(COUNTRY_LIST_FALLBACK.map(c => [c.countryCode, c.name]));
+  const countryName = (code) => COUNTRY_NAME_BY_CODE[code] || code;
+  let countriesLoaded = false;
+  const loadCountries = async () => {
+    if (countriesLoaded) return;
+    let list = COUNTRY_LIST_FALLBACK;
+    try {
+      const r = await fetch('https://date.nager.at/api/v3/AvailableCountries');
+      if (r.ok) list = (await r.json()).sort((a,b) => a.name.localeCompare(b.name));
+    } catch (_) {}
+    el('countrySelect').innerHTML = list.map(c => `<option value="${c.countryCode}" ${c.countryCode==='US'?'selected':''}>${esc(c.name)}</option>`).join('');
+    countriesLoaded = true;
+  };
+
+  const fetchHolidaysForCountry = async (year, countryCode) => {
+    try {
+      const r = await fetch(`https://date.nager.at/api/v3/publicholidays/${year}/${countryCode}`);
+      if (!r.ok) throw new Error('status ' + r.status);
+      const j = await r.json();
+      return j.map(h => ({ name: h.localName || h.name, date: h.date }));
+    } catch (e) {
+      const fb = COUNTRY_FALLBACKS[countryCode];
+      return fb ? fb(year) : [];
+    }
+  };
+
+  const renderUsList = () => {
+    const filterText = el('usFilter').value.trim().toLowerCase();
+    const list = S.usHolidays.filter(h => !filterText || h.name.toLowerCase().includes(filterText));
+    el('usList').innerHTML = list.map((h,i) => `
+      <label class="us-item">
+        <input type="checkbox" data-us="${h.date}|${esc(h.name)}" />
+        <span class="d">${h.date}</span>
+        <span>${esc(h.name)}</span>
+      </label>`).join('') || '<div class="hint" style="padding:10px">No results. Try fetching first.</div>';
+  };
+
+  // ---------- write operations ----------
+  // calendarrule supports neither Create/Update/Delete directly nor deep update,
+  // so every change re-creates the schedule in one deep insert and relinks its queues.
+
+  const buildRule = (name, dateIsoDay, countryCode) => {
+    const start = dateIsoDay;
+    const end = new Date(new Date(start).getTime() + 24*60*60*1000).toISOString();
+    return {
+      name,
+      description: countryCode ? `Holiday Rule (${countryCode})` : 'Holiday Rule',
+      timecode: 2, rank: 0, subcode: 5, extentcode: 2, issimple: false,
+      starttime: start, effectiveintervalstart: start, effectiveintervalend: end,
+      duration: 1440, pattern: 'FREQ=DAILY;INTERVAL=1;COUNT=1'
+    };
+  };
+
+  const existingRulesFor = (scheduleId, { excludeIds = [], editRule = null } = {}) =>
+    S.rows
+      .filter(r => r.scheduleId === scheduleId && !excludeIds.includes(r.id))
+      .map(r => {
+        const isEdit = editRule && editRule.ruleId === r.id;
+        const name = isEdit ? editRule.name : r.title;
+        const dateIso = isEdit ? editRule.date : (r.date ? r.date.toISOString() : null);
+        return dateIso ? buildRule(name, dateIso, r.countryCode) : null;
+      })
+      .filter(Boolean);
+
+  const applyScheduleToQueue = async (businessCalId, scheduleId) => {
+    const r = await fetch(baseUrl() + `/api/data/v9.2/calendars(${businessCalId})`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'If-Match': '*' },
+      body: JSON.stringify({ 'holidayschedulecalendarid@odata.bind': `/calendars(${scheduleId})` })
+    });
+    if (!r.ok) throw new Error(await r.text());
+  };
+
+  const clearScheduleFromQueue = async (businessCalId) => {
+    try { await fetch(baseUrl() + `/api/data/v9.2/calendars(${businessCalId})/holidayschedulecalendarid/$ref`, { method: 'DELETE' }); }
+    catch (_) {}
+  };
+
+  const reconcileQueues = async (previousIds, checkedIds) => {
+    const toRemove = previousIds.filter(qid => !checkedIds.includes(qid));
+    for (const qid of toRemove) {
+      const info = S.queueMap[qid];
+      if (info && info.businessCalId) await clearScheduleFromQueue(info.businessCalId);
+    }
+  };
+
+  const commitSchedule = async ({ scheduleId, scheduleName, rules, linkedQueueIds = [] }) => {
+    const buId = await getBusinessUnitId();
+    const payload = { name: scheduleName, type: 2, 'businessunitid@odata.bind': `/businessunits(${buId})` };
+    if (rules.length) payload.calendar_calendar_rules = rules;
+
+    const created = await fetch(baseUrl() + '/api/data/v9.2/calendars', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+      body: JSON.stringify(payload)
+    });
+    if (!created.ok) throw new Error('Failed to save schedule: ' + await created.text());
+    const newScheduleId = (await created.json()).calendarid;
+
+    for (const qid of linkedQueueIds) {
+      const info = S.queueMap[qid];
+      if (info && info.businessCalId) {
+        try { await applyScheduleToQueue(info.businessCalId, newScheduleId); } catch (_) {}
+      }
+    }
+
+    if (scheduleId) { try { await api(`calendars(${scheduleId})`, { method: 'DELETE' }); } catch (_) {} }
+    return newScheduleId;
+  };
+
+  const onSave = async () => {
+    setModalStatus('Saving...');
+    try {
+      if (S.editingId) {
+        const name = el('customName').value.trim();
+        const dateVal = el('customDate').value;
+        if (!name || !dateVal) throw new Error('Enter a holiday name and date.');
+        const [ey,em,ed] = dateVal.split('-').map(Number);
+        const start = isoDay(ey,em,ed);
+        const row = S.rows.find(r => r.id === S.editingId);
+        if (!row) throw new Error('Holiday not found; refresh and try again.');
+        const sched = S.schedules.find(s => s.calendarid === row.scheduleId);
+        const prevQueueIds = (S.reverseMap[row.scheduleId] || []).map(q => q.queueId);
+        const checkedQueueIds = [...document.querySelectorAll('#queueList input[type=checkbox]:checked')].map(cb => cb.dataset.queue);
+        await reconcileQueues(prevQueueIds, checkedQueueIds);
+        await commitSchedule({
+          scheduleId: row.scheduleId,
+          scheduleName: (sched && sched.name) || row.scheduleName,
+          rules: existingRulesFor(row.scheduleId, { editRule: { ruleId: S.editingId, name, date: start } }),
+          linkedQueueIds: checkedQueueIds
+        });
+        await load();
+        closeModal();
+        setStatus('Holiday updated.', 'ok');
+        return;
+      }
+
+      const sel = el('scheduleSelect').value;
+      const isNew = sel === '__new__';
+      const picked = S.schedules.find(s => s.calendarid === sel);
+      const scheduleName = isNew ? el('newScheduleName').value.trim() : ((picked && picked.name) || 'Holiday Schedule');
+      if (isNew && !scheduleName) throw new Error('Enter a name for the new holiday schedule.');
+
+      const newRules = [];
+      const activeTab = document.querySelector('.tab.active').dataset.tab;
+      if (activeTab === 'custom') {
+        const name = el('customName').value.trim();
+        const dateVal = el('customDate').value;
+        if (name && dateVal) {
+          const [cy,cm,cd] = dateVal.split('-').map(Number);
+          newRules.push(buildRule(name, isoDay(cy,cm,cd), null));
+        }
+      } else {
+        const cc = el('countrySelect').value || null;
+        [...document.querySelectorAll('#usList input[type=checkbox]:checked')].forEach(cb => {
+          const [date, nm] = cb.dataset.us.split('|');
+          const [iy,im,idd] = date.split('-').map(Number);
+          newRules.push(buildRule(nm, isoDay(iy,im,idd), cc));
+        });
+      }
+
+      const existing = isNew ? [] : existingRulesFor(sel);
+      const seen = new Set(existing.map(r => r.name + '|' + r.starttime.slice(0,10)));
+      const merged = existing.slice();
+      let skipped = 0;
+      newRules.forEach(r => {
+        const key = r.name + '|' + r.starttime.slice(0,10);
+        if (seen.has(key)) { skipped++; return; }
+        seen.add(key);
+        merged.push(r);
+      });
+      const added = merged.length - existing.length;
+
+      const checkedQueueIds = [...document.querySelectorAll('#queueList input[type=checkbox]:checked')].map(cb => cb.dataset.queue);
+      const prevQueueIds = isNew ? [] : (S.reverseMap[sel] || []).map(q => q.queueId);
+
+      if (!merged.length && !checkedQueueIds.length) throw new Error('Add at least one holiday or select a queue.');
+
+      await reconcileQueues(prevQueueIds, checkedQueueIds);
+      await commitSchedule({ scheduleId: isNew ? null : sel, scheduleName, rules: merged, linkedQueueIds: checkedQueueIds });
+      const summary = `Saved. Holidays added: ${added}${skipped ? ', skipped duplicates: ' + skipped : ''}. Queues linked: ${checkedQueueIds.length}.`;
+      await load();
+      closeModal();
+      setStatus(summary, 'ok');
+    } catch (e) {
+      setModalStatus(String(e.message || e), 'err');
+    }
+  };
+
+  let scheduleDeleteArmed = null;
+  let expandedScheduleId = null;
+
+  const scheduleHolidaysPanelHtml = (s) => {
+    const items = S.rows.filter(r => r.scheduleId === s.calendarid);
+    const rowsHtml = items.length ? items.map(it => `
+      <tr>
+        <td><strong>${esc(it.title)}</strong></td>
+        <td>${fmtDate(it.date)}</td>
+        <td>${fmtDur(it.duration)}</td>
+        <td class="rowactions">
+          <button class="sec" data-schedule-edit="${it.id}">Edit</button>
+          <button class="danger-btn" data-schedule-delete="${it.id}">Delete</button>
+        </td>
+      </tr>`).join('') : '<tr><td colspan="4" class="hint" style="padding:10px">No holidays in this schedule yet.</td></tr>';
+    return `<div class="schedule-holidays-panel">
+      <div class="schedule-holidays-head">
+        <span>Holidays in this schedule</span>
+        <button class="pri" data-schedule-add="${s.calendarid}">+ Add holiday</button>
+      </div>
+      <table class="mini-table">
+        <thead><tr><th>Holiday</th><th>Date</th><th>Duration</th><th>Actions</th></tr></thead>
+        <tbody>${rowsHtml}</tbody>
+      </table>
+    </div>`;
+  };
+
+  const scheduleRowHtml = (s) => {
+    const holidayCount = S.rows.filter(r => r.scheduleId === s.calendarid).length;
+    const queueCount = (S.reverseMap[s.calendarid] || []).length;
+    const armed = scheduleDeleteArmed === s.calendarid;
+    const expanded = expandedScheduleId === s.calendarid;
+    return `<div class="schedule-row-wrap" data-schedule-wrap="${s.calendarid}">
+      <div class="schedule-row${expanded ? ' expanded' : ''}" data-schedule="${s.calendarid}">
+        <span class="sr-caret">${expanded ? '▾' : '▸'}</span>
+        <button type="button" class="sr-name-link" title="Click to view and manage this schedule's holidays">${esc(s.name || '(untitled schedule)')}</button>
+        <span class="sr-meta">${holidayCount} holiday${holidayCount === 1 ? '' : 's'} · ${queueCount} queue${queueCount === 1 ? '' : 's'}</span>
+        <span class="sr-actions">
+          <button class="sec sr-rename">Rename</button>
+          <button class="danger-btn sr-delete">${armed ? 'Click again to confirm' : 'Delete'}</button>
+        </span>
+      </div>
+      ${expanded ? scheduleHolidaysPanelHtml(s) : ''}
+    </div>`;
+  };
+
+  const renderSchedulesList = () => {
+    el('schedulesList').innerHTML = S.schedules.map(scheduleRowHtml).join('') || '<div class="hint" style="padding:10px">No holiday schedules yet.</div>';
+  };
+
+  const enterRenameMode = (scheduleId) => {
+    const row = document.querySelector(`.schedule-row[data-schedule="${scheduleId}"]`);
+    const s = S.schedules.find(x => x.calendarid === scheduleId);
+    if (!row || !s) return;
+    row.innerHTML = `
+      <input class="sr-name-edit" value="${esc(s.name || '')}" />
+      <span class="sr-actions">
+        <button class="sec sr-save">Save name</button>
+        <button class="sec sr-cancel">Cancel</button>
+      </span>
+    `;
+    const inp = row.querySelector('.sr-name-edit');
+    inp.focus();
+    inp.select();
+  };
+
+  const switchTab = (tab) => {
+    el('tabBtnHolidays').classList.toggle('active', tab === 'holidays');
+    el('tabBtnSchedules').classList.toggle('active', tab === 'schedules');
+    el('tabPanelHolidays').classList.toggle('active', tab === 'holidays');
+    el('tabPanelSchedules').classList.toggle('active', tab === 'schedules');
+    if (tab === 'schedules') {
+      scheduleDeleteArmed = null;
+      el('newScheduleRowName').value = '';
+      renderSchedulesList();
+    }
+  };
+  const createEmptySchedule = async (name) => {
+    const buId = await getBusinessUnitId();
+    const created = await fetch(baseUrl() + '/api/data/v9.2/calendars', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+      body: JSON.stringify({ name, type: 2, 'businessunitid@odata.bind': `/businessunits(${buId})` })
+    });
+    if (!created.ok) throw new Error(await created.text());
+  };
+
+  const renameSchedule = async (scheduleId, name) => {
+    const r = await fetch(baseUrl() + `/api/data/v9.2/calendars(${scheduleId})`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'If-Match': '*' },
+      body: JSON.stringify({ name })
+    });
+    if (!r.ok) throw new Error(await r.text());
+  };
+
+  const deleteScheduleEntirely = async (scheduleId) => {
+    const linkedQueues = S.reverseMap[scheduleId] || [];
+    for (const q of linkedQueues) {
+      const info = S.queueMap[q.queueId];
+      if (info && info.businessCalId) await clearScheduleFromQueue(info.businessCalId);
+    }
+    await api(`calendars(${scheduleId})`, { method: 'DELETE' });
+  };
+
+  const openConfirmDelete = (ids) => {
+    const items = S.rows.filter(r => ids.includes(r.id));
+    if (!items.length) return;
+    S.pendingDelete = ids;
+    el('confirmTitle').innerHTML = `<span class="icon"><svg viewBox="0 0 20 20" fill="none"><path d="M4 6h12M8 6V4.5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1V6M5.5 6l.6 9.4a1 1 0 0 0 1 .9h5.8a1 1 0 0 0 1-.9L14.5 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M8.3 9v4.2M11.7 9v4.2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>Delete ${items.length === 1 ? 'holiday' : items.length + ' holidays'}`;
+    el('confirmList').innerHTML = items.map(it => `
+      <div class="confirm-item">
+        <b>${esc(it.title)}</b>
+        <span>${fmtDate(it.date)} · ${esc(it.scheduleName)}</span>
+      </div>`).join('');
+    el('confirmBackdrop').classList.add('show');
+    document.body.classList.add('modal-open');
+  };
+
+  const closeConfirmModal = () => {
+    el('confirmBackdrop').classList.remove('show');
+    if (!document.getElementById('modalBackdrop').classList.contains('show')) document.body.classList.remove('modal-open');
+    S.pendingDelete = [];
+  };
+
+  const confirmDeleteExecute = async () => {
+    const ids = S.pendingDelete.slice();
+    if (!ids.length) return;
+    el('confirmDeleteBtn').textContent = 'Deleting...';
+    el('confirmDeleteBtn').disabled = true;
+
+    const bySchedule = {};
+    ids.forEach(rid => {
+      const row = S.rows.find(r => r.id === rid);
+      if (!row) return;
+      (bySchedule[row.scheduleId] = bySchedule[row.scheduleId] || []).push(rid);
+    });
+
+    let failed = 0;
+    for (const [scheduleId, removeIds] of Object.entries(bySchedule)) {
+      try {
+        const sched = S.schedules.find(s => s.calendarid === scheduleId);
+        await commitSchedule({
+          scheduleId,
+          scheduleName: (sched && sched.name) || 'Holiday Schedule',
+          rules: existingRulesFor(scheduleId, { excludeIds: removeIds }),
+          linkedQueueIds: (S.reverseMap[scheduleId] || []).map(q => q.queueId)
+        });
+      } catch (e) { failed += removeIds.length; }
+    }
+
+    ids.forEach(i => S.selected.delete(i));
+    el('confirmDeleteBtn').textContent = 'Delete';
+    el('confirmDeleteBtn').disabled = false;
+    closeConfirmModal();
+    if (failed) setStatus(failed + ' holiday(s) failed to delete.', 'err');
+    await load();
+  };
+
+  // ---------- wire up ----------
+
+  el('year').addEventListener('change', apply);
+  el('month').addEventListener('change', apply);
+  el('q').addEventListener('input', apply);
+  el('reset').addEventListener('click', () => { el('year').value='all'; el('month').value='all'; el('q').value=''; apply(); });
+  el('refresh').addEventListener('click', () => load().catch(e => setStatus(String(e.message||e), 'err')));
+
+  el('openNew').addEventListener('click', () => openModal(null));
+  el('tabBtnHolidays').addEventListener('click', () => switchTab('holidays'));
+  el('tabBtnSchedules').addEventListener('click', () => switchTab('schedules'));
+
+  el('newScheduleRowAdd').addEventListener('click', async () => {
+    const name = el('newScheduleRowName').value.trim();
+    if (!name) return;
+    el('newScheduleRowAdd').disabled = true;
+    try {
+      await createEmptySchedule(name);
+      el('newScheduleRowName').value = '';
+      await load();
+      renderSchedulesList();
+    } catch (e) {
+      setStatus(String(e.message || e), 'err');
+    } finally {
+      el('newScheduleRowAdd').disabled = false;
+    }
+  });
+
+  el('schedulesList').addEventListener('click', async (e) => {
+    const wrap = e.target.closest('.schedule-row-wrap');
+    if (!wrap) return;
+    const scheduleId = wrap.getAttribute('data-schedule-wrap');
+    const row = wrap.querySelector('.schedule-row');
+
+    const addSchedId = e.target.getAttribute('data-schedule-add');
+    if (addSchedId) { openModal(addSchedId); return; }
+    const editHolId = e.target.getAttribute('data-schedule-edit');
+    if (editHolId) { openEditModal(editHolId); return; }
+    const delHolId = e.target.getAttribute('data-schedule-delete');
+    if (delHolId) { openConfirmDelete([delHolId]); return; }
+
+    if (e.target.classList.contains('sr-name-link')) {
+      expandedScheduleId = expandedScheduleId === scheduleId ? null : scheduleId;
+      renderSchedulesList();
+      return;
+    }
+
+    if (e.target.classList.contains('sr-rename')) {
+      enterRenameMode(scheduleId);
+      return;
+    }
+
+    if (e.target.classList.contains('sr-cancel')) {
+      renderSchedulesList();
+      return;
+    }
+
+    if (e.target.classList.contains('sr-save')) {
+      const newName = row.querySelector('.sr-name-edit').value.trim();
+      if (!newName) return;
+      e.target.disabled = true;
+      try { await renameSchedule(scheduleId, newName); await load(); renderSchedulesList(); }
+      catch (err) { setStatus(String(err.message || err), 'err'); }
+      finally { e.target.disabled = false; }
+      return;
+    }
+
+    if (e.target.classList.contains('sr-delete')) {
+      if (scheduleDeleteArmed !== scheduleId) {
+        scheduleDeleteArmed = scheduleId;
+        renderSchedulesList();
+        setTimeout(() => { if (scheduleDeleteArmed === scheduleId) { scheduleDeleteArmed = null; renderSchedulesList(); } }, 4000);
+        return;
+      }
+      scheduleDeleteArmed = null;
+      e.target.disabled = true;
+      try { await deleteScheduleEntirely(scheduleId); await load(); renderSchedulesList(); }
+      catch (err) { setStatus(String(err.message || err), 'err'); }
+      return;
+    }
+  });
+  el('modalClose').addEventListener('click', closeModal);
+  el('modalCancel').addEventListener('click', closeModal);
+  el('scheduleSelect').addEventListener('change', () => {
+    toggleNewScheduleField();
+    S.modalScheduleId = el('scheduleSelect').value === '__new__' ? null : el('scheduleSelect').value;
+    renderQueueList();
+  });
+  el('queueFilter').addEventListener('input', renderQueueList);
+  el('usFilter').addEventListener('input', renderUsList);
+  el('modalSave').addEventListener('click', onSave);
+
+  document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => setActiveTab(t.dataset.tab)));
+
+  el('usFetch').addEventListener('click', async () => {
+    const year = Number(el('usYear').value) || new Date().getFullYear();
+    const countryCode = el('countrySelect').value || 'US';
+    const countryName = el('countrySelect').selectedOptions[0]?.textContent || countryCode;
+    el('usHint').textContent = 'Loading ' + countryName + ' holidays for ' + year + '...';
+    S.usHolidays = await fetchHolidaysForCountry(year, countryCode);
+    el('usHint').textContent = 'Loaded ' + S.usHolidays.length + ' holidays for ' + countryName + ' (' + year + ').';
+    renderUsList();
+  });
+
+  el('rows').addEventListener('click', e => {
+    const deleteId = e.target.getAttribute('data-delete');
+    const editId = e.target.getAttribute('data-edit');
+    if (deleteId) openConfirmDelete([deleteId]);
+    if (editId) openEditModal(editId);
+  });
+
+  el('rows').addEventListener('change', e => {
+    if (!e.target.classList.contains('rowcheck')) return;
+    const rid = e.target.getAttribute('data-id');
+    if (e.target.checked) S.selected.add(rid); else S.selected.delete(rid);
+    updateBulkBar();
+    const allChecked = S.filtered.length > 0 && S.filtered.every(it => S.selected.has(it.id));
+    el('selectAll').checked = allChecked;
+  });
+
+  el('selectAll').addEventListener('change', e => {
+    if (e.target.checked) S.filtered.forEach(it => S.selected.add(it.id));
+    else S.filtered.forEach(it => S.selected.delete(it.id));
+    render();
+  });
+
+  el('bulkClear').addEventListener('click', () => { S.selected.clear(); render(); });
+  el('bulkDelete').addEventListener('click', () => openConfirmDelete([...S.selected]));
+  el('confirmClose').addEventListener('click', closeConfirmModal);
+  el('confirmCancel').addEventListener('click', closeConfirmModal);
+  el('confirmDeleteBtn').addEventListener('click', confirmDeleteExecute);
+
+  load().catch(e => setStatus(String(e.message||e), 'err'));
+})();
+</script>
+</body>
+</html>
