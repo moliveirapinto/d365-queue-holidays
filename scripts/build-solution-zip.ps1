@@ -1,7 +1,7 @@
 # Rebuilds the unmanaged Dataverse solution zip from solution/ into the repo root.
 $root = Split-Path -Parent $PSScriptRoot
 $sol = "$root\solution"
-$zipPath = "$root\QueueHolidaysManager_1_4_0_0.zip"
+$zipPath = "$root\QueueHolidaysManager_1_5_0_0.zip"
 if (Test-Path $zipPath) { Remove-Item $zipPath -Force }
 
 Add-Type -AssemblyName System.IO.Compression
