@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ImportExportXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="9.2.24101.204" SolutionPackageVersion="9.2" languagecode="1033" generatedBy="QueueHolidaysManager" ImportMode="testing">
+  <SolutionManifest>
+    <UniqueName>QueueHolidaysManager</UniqueName>
+    <LocalizedNames>
+      <LocalizedName description="Queue Holidays Manager" languagecode="1033" />
+    </LocalizedNames>
+    <Descriptions>
+      <Description description="Manage Omnichannel queue holiday schedules from a single screen." languagecode="1033" />
+    </Descriptions>
+    <Version>1.0.0.0</Version>
+    <Managed>0</Managed>
+    <Publisher>
+      <UniqueName>queueholidaysmanager</UniqueName>
+      <LocalizedNames>
+        <LocalizedName description="Queue Holidays Manager" languagecode="1033" />
+      </LocalizedNames>
+      <Descriptions>
+        <Description description="Community publisher for the Queue Holidays Manager tool." languagecode="1033" />
+      </Descriptions>
+      <EMailAddress xsi:nil="true" />
+      <SupportingWebsiteUrl xsi:nil="true" />
+      <CustomizationPrefix>qhol</CustomizationPrefix>
+      <CustomizationOptionValuePrefix>10000</CustomizationOptionValuePrefix>
+      <Addresses>
+        <Address>
+          <AddressNumber>1</AddressNumber>
+          <City xsi:nil="true" />
+          <Country xsi:nil="true" />
+          <County xsi:nil="true" />
+          <Fax xsi:nil="true" />
+          <FreightTermsCode xsi:nil="true" />
+          <ImportSequenceNumber xsi:nil="true" />
+          <Latitude xsi:nil="true" />
+          <Line1 xsi:nil="true" />
+          <Line2 xsi:nil="true" />
+          <Line3 xsi:nil="true" />
+          <Longitude xsi:nil="true" />
+          <Name xsi:nil="true" />
+          <PostalCode xsi:nil="true" />
+          <PostOfficeBox xsi:nil="true" />
+          <PrimaryContactName xsi:nil="true" />
+          <ShippingMethodCode xsi:nil="true" />
+          <StateOrProvince xsi:nil="true" />
+          <Telephone1 xsi:nil="true" />
+          <Telephone2 xsi:nil="true" />
+          <Telephone3 xsi:nil="true" />
+          <TimeZoneRuleVersionNumber xsi:nil="true" />
+          <UPSZone xsi:nil="true" />
+          <UTCOffset xsi:nil="true" />
+          <UTCConversionTimeZoneCode xsi:nil="true" />
+        </Address>
+      </Addresses>
+    </Publisher>
+  </SolutionManifest>
+  <RootComponents>
+    <RootComponent type="61" schemaName="qhol_queue_holidays_app.html" behavior="0" />
+  </RootComponents>
+  <MissingDependencies />
+</ImportExportXml>

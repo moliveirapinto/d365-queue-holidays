@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ImportExportXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Entities />
+  <Roles />
+  <Workflows />
+  <FieldSecurityProfiles />
+  <Templates />
+  <EntityMaps />
+  <EntityRelationships />
+  <OrganizationSettings />
+  <optionsets />
+  <CustomControls />
+  <WebResources>
+    <WebResource>
+      <Name>qhol_queue_holidays_app.html</Name>
+      <FileName>WebResources/qhol_queue_holidays_app.html</FileName>
+      <WebResourceType>1</WebResourceType>
+      <IntroducedVersion>1.0.0.0</IntroducedVersion>
+      <IsCustomizable>1</IsCustomizable>
+      <IsHidden>0</IsHidden>
+      <LocalizedNames>
+        <LocalizedName description="Queue Holidays Manager" languagecode="1033" />
+      </LocalizedNames>
+      <Descriptions>
+        <Description description="Single-page app to manage Omnichannel queue holiday schedules and assign them to queues." languagecode="1033" />
+      </Descriptions>
+    </WebResource>
+  </WebResources>
+</ImportExportXml>
